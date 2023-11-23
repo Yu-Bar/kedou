@@ -1,0 +1,49 @@
+{
+	// 组件自动导入
+	"easycom": {
+		// 是否开启自动扫描
+		"autoscan": true,
+		"custom": {
+			// uni-ui 规则如下配置  // [!code ++]
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue" // [!code ++]
+		}
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#272b1e",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"color": "#fff2f6",
+		"backgroundColor": "#444444",
+		"selectedColor": "#e5e5e5",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/tabs/home_default.png",
+				"selectedIconPath": "static/tabs/home_selected.png"
+			},{
+				"pagePath": "pages/my/my",
+				"text": "我",
+				"iconPath": "static/tabs/user_default.png",
+				"selectedIconPath": "static/tabs/user_selected.png"
+			}
+		]
+	}
+}

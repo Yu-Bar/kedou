@@ -1,0 +1,25 @@
+// tsconfig.json
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "lib": ["esnext", "dom"],
+    // 类型声明文件
+    "types": [
+      "@dcloudio/types", // uni-app API 类型
+      "miniprogram-api-typings", // 原生微信小程序类型
+      "@uni-helper/uni-app-types", // uni-app 组件类型
+      "@uni-helper/uni-ui-types" // uni-ui 组件类型
+    ]
+  },
+  // vue 编译器类型，校验标签类型
+  "vueCompilerOptions": {
+    // 原配置 `experimentalRuntimeMode` 现调整为 `nativeTags`
+    "nativeTags": ["block", "component", "template", "slot"], 
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+}
