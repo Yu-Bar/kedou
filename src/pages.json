@@ -4,14 +4,18 @@
 		// 是否开启自动扫描
 		"autoscan": true,
 		"custom": {
-			// uni-ui 规则如下配置  // [!code ++]
-			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue" // [!code ++]
+			// uni-ui 规则如下配置  
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue", 
+			// 自动导入 components 文件夹下的以 Kedou 开头的组件
+			"^Kedou(.*)": "@/components/Kedou$1.vue"
 		}
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
+				"navigationStyle": "custom", // 隐藏默认导航
+				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "首页"
 			}
 		},
@@ -19,6 +23,12 @@
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "我"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登陆"
 			}
 		}
 	],
@@ -30,14 +40,15 @@
 	},
 	"tabBar": {
 		"color": "#fff2f6",
-		"backgroundColor": "#444444",
-		"selectedColor": "#e5e5e5",
+		"backgroundColor": "#000000",
+		"selectedColor": "#f3f3f3",
+		"fontSize": "30px",
 		"list": [
 			{
 				"pagePath": "pages/index/index",
 				"text": "首页",
-				"iconPath": "static/tabs/home_default.png",
-				"selectedIconPath": "static/tabs/home_selected.png"
+				"iconPath": "static/logo.png",
+				"selectedIconPath": "static/logo_out.png"
 			},{
 				"pagePath": "pages/my/my",
 				"text": "我",
