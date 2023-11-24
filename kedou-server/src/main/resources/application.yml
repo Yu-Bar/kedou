@@ -1,0 +1,66 @@
+server:
+  port: ${kedou.port:8077}
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${kedou.datasource.host:localhost}:${kedou.datasource.port:3306}/${kedou.datasource.database:kedou}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${kedou.datasource.username:root}
+    password: ${kedou.datasource.password:123}
+  profiles:
+    active: dev
+#MyBatis-Plus相关配置
+mybatis-plus:
+  configuration:
+    #配置日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/mapper/**/*.xml # Mapper.xml文件地址，当前这个是默认值。
+  type-aliases-package: com.yubar.kedou.mapper
+kedou:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: admin
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+    # 用户端
+    user-secret-key: user
+    user-ttl: 7200000
+    user-token-name: authentication
+  alioss:
+    endpoint: ${kedou.alioss.endpoint}
+    access-key-id: ${kedou.alioss.access-key-id}
+    access-key-secret: ${kedou.alioss.access-key-secret}
+    bucket-name: ${kedou.alioss.bucket-name}
+  wechat:
+    appid: ${kedou.wechat.appid}
+    secret: ${kedou.wechat.secret}
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    title:
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: '用户端'
+      paths-to-match: '/**'
+      packages-to-scan: com.yubar.kedou.controller.user
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  documents:
+    - group: 1.0版本
+      name: Yubar
+      locations: classpath:sign/*
+  setting:
+    language: zh_cn
+    footer-custom-content: Copyright @ Yu-Bar (https://github.com/Yu-Bar)
+    # 自4.1.0版本开始，替代home-custom-location属性，开发者请使用该配置
+    enable-home-custom: true
+    home-custom-path: classpath:MarkDown/readme.md
+

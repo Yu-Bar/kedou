@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yubar.kedou.mapper.MessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Message">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="sender" column="sender" jdbcType="BIGINT"/>
+            <result property="receiver" column="receiver" jdbcType="BIGINT"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="videoId" column="video_id" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,sender,receiver,
+        content,video_id,create_time
+    </sql>
+</mapper>
