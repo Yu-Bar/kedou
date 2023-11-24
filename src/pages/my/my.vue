@@ -10,7 +10,7 @@
     <button @tap="
       memberStore.setProfile({
         nickname: '钰酱科抖',
-        token: '123456'
+        token: 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDA4MzY3NzEsInVzZXJJZCI6MX0.Rj4XDbRPzr62DXVY8pYekBUv8iSH2kOTAv5sCIeWB7I'
       })
       " size="mini" plain type="primary">
       保存用户信息
@@ -33,11 +33,11 @@ export default {
   methods: {
     // 测试请求
     getData : async () => {
-      const res = await http<AnyArray>({
+      const res = await http({
         method:'GET',
-        url:'/member/profile',
+        url:'/user/' + 1,
       })
-      console.log('请求成功：' , res.result)
+      console.log('请求成功：' , res.data)
     }
   }
 }

@@ -27,7 +27,7 @@ const httpInterceptor = {
     const memberStore = useMemberStore()
     const token = memberStore.profile?.token
     if (token) {
-      options.header.Authorization = token
+      options.header.authentication = token
     }
   },
 }
@@ -53,7 +53,7 @@ uni.addInterceptor('uploadFile', httpInterceptor)
 type Data<T> = {
   code: string
   msg: string
-  result: T
+  data: T
 }
 // 2.2 添加类型，支持泛型
 export const http = <T>(options: UniApp.RequestOptions) => {
