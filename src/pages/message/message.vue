@@ -1,16 +1,19 @@
 <template>
 	<view>
-		<CustomNavbar />
-<!--		<KedouSwiper />-->
+		message
 	</view>
 </template>
 
 <script>
-	import CustomNavbar from './components/CustomNavbar.vue'
 	export default {
-		components: {
-			CustomNavbar,
+		data() {
+			return {
+				
+			}
 		},
+		methods: {
+			
+		}
 	}
 </script>
 
@@ -21,6 +24,7 @@
 	}
 
 	view {
+		height: 100%;
 		color: #ffffff;
 	}
 </style>

@@ -4,8 +4,8 @@
 		// 是否开启自动扫描
 		"autoscan": true,
 		"custom": {
-			// uni-ui 规则如下配置  
-			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue", 
+			// uni-ui 规则如下配置
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue",
 			// 自动导入 components 文件夹下的以 Kedou 开头的组件
 			"^Kedou(.*)": "@/components/Kedou$1.vue"
 		}
@@ -20,15 +20,44 @@
 			}
 		},
 		{
-			"path": "pages/my/my",
+			"path": "pages/publish/publish",
 			"style": {
-				"navigationBarTitleText": "我"
+				"navigationBarTitleText": "发布视频"
 			}
 		},
 		{
-			"path": "pages/login/login",
+			"path": "pages/friend/friend",
 			"style": {
-				"navigationBarTitleText": "登陆"
+				"navigationBarTitleText": "朋友"
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "我的消息"
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/my/login/login",
+			"style" : 
+			{
+				"navigationBarTitleText" : "登陆",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/my/login/loginWithPassword",
+			"style" : 
+			{
+				"navigationBarTitleText" : "登陆",
+				"enablePullDownRefresh" : false
 			}
 		}
 	],
@@ -39,21 +68,30 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-		"color": "#fff2f6",
+		"color": "#bfbccb",
 		"backgroundColor": "#000000",
-		"selectedColor": "#f3f3f3",
-		"fontSize": "30px",
-		"list": [
-			{
+		"selectedColor": "#c9eaff",
+		"fontSize": "50px",
+		"list": [{
 				"pagePath": "pages/index/index",
-				"text": "首页",
-				"iconPath": "static/logo.png",
-				"selectedIconPath": "static/logo_out.png"
-			},{
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/friend/friend",
+				"text": "朋友"
+			},
+			{
+				"pagePath": "pages/publish/publish",
+				"iconPath": "static/add.png",
+				"selectedIconPath": "static/add.png"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"text": "信息"
+			},
+			{
 				"pagePath": "pages/my/my",
-				"text": "我",
-				"iconPath": "static/tabs/user_default.png",
-				"selectedIconPath": "static/tabs/user_selected.png"
+				"text": "我"
 			}
 		]
 	}

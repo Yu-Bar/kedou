@@ -1,27 +1,21 @@
 <template>
   <view>
-<!--    <swiper vertical @change="swiperChange" @animationfinish="handleTouchMove" style="width: 100vw; height: 100vh;">-->
-<!--      <swiper-item v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">-->
-<!--        <view v-if="currentIndex === index" class="video-container" :style="{ top: videoTop }">-->
-<!--          <video id="myVideo" :src="video.url" :autoplay="index === currentIndex" @ended="replayCurrentVideo"-->
-<!--                 controls class="fullscreen-video" @tap="togglePlay" :show-progress="false" :show-play-btn="false"-->
-<!--                 :show-fullscreen-btn="false" :show-mute-btn="false" @loadedmetadata="loadVideo"></video>-->
-<!--        </view>-->
-<!--      </swiper-item>-->
-<!--    </swiper>-->
-<!--    <button @click="showVideoLists">click</button>-->
+    <swiper vertical @change="swiperChange" @animationfinish="handleTouchMove" style="width: 100vw; height: 100vh;">
+      <swiper-item v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">
+        <view v-if="currentIndex === index" class="video-container" :style="{ top: videoTop }">
+          <video id="myVideo" :src="video.url" :autoplay="index === currentIndex" @ended="replayCurrentVideo"
+                 controls class="fullscreen-video" @tap="togglePlay" :show-progress="false" :show-play-btn="false"
+                 :show-fullscreen-btn="false" :show-mute-btn="false" @loadedmetadata="loadVideo"></video>
+        </view>
+      </swiper-item>
+    </swiper>
+
+    <button @click="showVideoLists">click</button>
     <p>Author: {{ authorId }}</p>
   </view>
 </template>
 
 <script>
-
-// var currentIndex: number
-// var videoContext
-// defineProps<{
-//   authorId:number
-// }>()
-
 import {getVideoLists} from "@/service/VideoApi";
 
 let authorId;

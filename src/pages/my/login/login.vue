@@ -1,14 +1,22 @@
 // src/pages/login/login.vue
 
-<script setup lang="ts">
-//
+<script>
+export default {
+  methods: {
+    loginWithPassword() {
+      uni.redirectTo({
+        url: '/pages/my/login/loginWithPassword' // 跳转到其他页面
+      });
+    },
+  },
+};
 </script>
 
 <template>
   <view class="viewport">
     <view class="logo">
       <image
-          src="@/static/logo_out1.png"
+          src="@/static/logo_out.png"
       ></image>
     </view>
     <view class="login">
@@ -28,7 +36,7 @@
         </view>
         <view class="options">
           <!-- 通用模拟登录 -->
-          <button>
+          <button @tap="loginWithPassword">
             <text class="icon">密码登录</text>
           </button>
         </view>
@@ -40,8 +48,12 @@
 
 <style lang="scss">
 page {
-  height: 100%;
-  background-color: #000000;
+	height: 100%;
+	background-color: #242424;
+}
+
+view {
+	color: #ffffff;
 }
 
 .viewport {
@@ -54,6 +66,7 @@ page {
 .logo {
   flex: 1;
   text-align: center;
+
   image {
     width: 220rpx;
     height: 220rpx;
@@ -86,8 +99,9 @@ page {
     font-size: 28rpx;
     border-radius: 72rpx;
     color: #fff;
+
     .icon {
-      color: #fcfffa;
+      color: #ffffff;
       font-size: 40rpx;
       margin-right: 6rpx;
     }
@@ -106,6 +120,7 @@ page {
     flex: 1;
     padding: 70rpx 70rpx 0;
     align-content: center;
+
     .caption {
       width: 440rpx;
       line-height: 1;
@@ -113,6 +128,7 @@ page {
       font-size: 26rpx;
       color: #000000;
       position: relative;
+
       text {
         transform: translate(-40%);
         width: 200rpx;
@@ -131,6 +147,7 @@ page {
       justify-content: center;
       align-items: center;
       margin-top: 70rpx;
+
       button {
         padding: 0;
         background-color: transparent;
@@ -142,7 +159,7 @@ page {
       display: flex;
       flex-direction: column;
       align-items: center;
-      color:  #fff;
+      color: #fff;
 
       &::before {
         display: flex;
@@ -156,6 +173,7 @@ page {
         border-radius: 50%;
       }
     }
+
     .icon-weixin::before {
       border-color: #06c05f;
       color: #06c05f;
