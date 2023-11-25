@@ -1,14 +1,36 @@
 # "科抖"短视频平台项目
 
-> Author: Yubar
+> Author: [Yu-bar](https://github.com/Yu-Bar) 
 >
 > Date: 2023.11.24
 
-USTC自己的抖音！
+## 1 介绍
 
-## 1 模块设计
+"科抖"是一款短视频平台应用，USTC自己的抖音！
 
-### 1.1 视频模块
+### 1.1 技术选型
+
+- 前端：uni-app + vue3 + uni-ui
+- 后端：JDK17 + SpringBoot3 \+ MySql + Redis + RabbitMQ + 阿里云OSS
+
+
+
+## 2 使用说明
+
+- 前端：
+- 后端：
+
+
+
+## 3 架构设计
+
+![架构设计](.\doc\img\架构设计.png)
+
+
+
+## 4 模块设计
+
+### 4.1 视频模块
 
 BaseUrl : "/user/video"
 
@@ -32,7 +54,7 @@ BaseUrl : "/user/video"
 
   
 
-### 1.2 评论模块
+### 4.2 评论模块
 
 BaseUrl : "/user/comment"
 
@@ -53,7 +75,7 @@ BaseUrl : "/user/comment"
   >
   >Body:
 
-### 1.3 用户模块
+### 4.3 用户模块
 
 BaseUrl : "/user/user"
 
@@ -73,7 +95,7 @@ BaseUrl : "/user/user"
   >
 
 
-### 1.4 关系模块
+### 4.4 关系模块
 
 BaseUrl : "/user/relation"
 
@@ -107,7 +129,7 @@ BaseUrl : "/user/relation"
   >
   >method: DELETE
 
-### 1.5 喜欢模块
+### 4.5 喜欢模块
 
 BaseUrl : "/user/likes"
 
@@ -137,7 +159,7 @@ BaseUrl : "/user/likes"
   >
   > Params: 
 
-### 1.6 收藏模块
+### 4.6 收藏模块
 
 BaseUrl : "/user/star"
 
@@ -167,7 +189,7 @@ BaseUrl : "/user/star"
   >
   > Params: 
 
-### 1.7 消息模块
+### 4.7 消息模块
 
 BaseUrl : "/user/message"
 
@@ -188,10 +210,13 @@ BaseUrl : "/user/message"
   > method: GET
   >
 
-### 1.8 分享模块
+### 4.8 分享模块
 
 ...待设计
 
 
 
-## 2 数据库设计
+## 5 数据库设计
+
+![数据库设计](.\doc\img\数据库设计.png)
+

@@ -57,7 +57,7 @@ public class UserController {
 
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(user.getId())
-                .nickName(user.getNickname())
+                .nickname(user.getNickname())
                 .token(token)
                 .build();
 

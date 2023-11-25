@@ -20,7 +20,7 @@ public class UserLoginVO implements Serializable {
     private Long id;
 
     @Schema(description = "姓名")
-    private String nickName;
+    private String nickname;
 
     @Schema(description = "jwt令牌")
     private String token;

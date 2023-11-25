@@ -1,5 +1,6 @@
 package com.yubar.kedou.domain.vo;
 
+import com.yubar.kedou.domain.po.Video;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,21 +22,21 @@ public class UserVO implements Serializable {
     private Long id;
 
     @Schema(description = "用户名")
-    private String userName;
+    private String username;
 
-    @Schema(description = "姓名")
-    private String nickName;
+    @Schema(description = "昵称")
+    private String nickname;
 
-    @Schema(description = "主键值")
+    @Schema(description = "喜欢")
     private Long likes;
 
-    @Schema(description = "主键值")
+    @Schema(description = "朋友")
     private Long friends;
 
-    @Schema(description = "主键值")
+    @Schema(description = "关注")
     private Long following;
 
-    @Schema(description = "主键值")
+    @Schema(description = "粉丝")
     private Long follower;
 
     @Schema(description = "头像")
@@ -58,7 +60,7 @@ public class UserVO implements Serializable {
     @Schema(description = "账号状态")
     private Integer status;
 
-    @Schema(description = "jwt令牌")
-    private String token;
+    @Schema(description = "视频列表")
+    private List<Video> videoList;
 
 }

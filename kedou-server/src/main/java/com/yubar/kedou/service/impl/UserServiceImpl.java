@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.constant.MessageConstant;
 import com.yubar.kedou.constant.StatusConstant;
+import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.UserVO;
 import com.yubar.kedou.exception.AccountLockedException;
 import com.yubar.kedou.exception.AccountNotFoundException;
@@ -13,9 +14,13 @@ import com.yubar.kedou.domain.dto.UserLoginDTO;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.mapper.UserMapper;
+import com.yubar.kedou.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.util.List;
 
 /**
 * @author 兰豹基
@@ -26,7 +31,8 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
-
+    @Autowired
+    VideoService videoService;
 
     /**
      * 用户登陆
@@ -35,17 +41,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public User login(UserLoginDTO userLoginDTO) {
-        String username = userLoginDTO.getUsername();
+        String account = userLoginDTO.getAccount();
         String password = userLoginDTO.getPassword();
-        String phone = userLoginDTO.getPhone();
 
         //1、根据用户名查询数据库中的数据
-        User user = null;
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        if(username != null && username != "")
-            user = getOne(wrapper.eq(User::getUsername, username));
-        else if(phone != null)
-            user = getOne(wrapper.eq(User::getPhone, phone));
+        User user = getOne(wrapper.eq(User::getUsername, account));
+        if(user == null)
+            user = getOne(wrapper.eq(User::getPhone, account));
 
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
         if (user == null) {
@@ -78,11 +81,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      */
     @Override
     public UserVO getInfoById(Long userId) {
+        // 查询用户
         User user = getById(userId);
         if(user == null)
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         UserVO userVO = new UserVO();
         BeanUtil.copyProperties(user, userVO);
+        // 查询用户发布视频
+        LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        List<Video> videoList = videoService.list(wrapper.eq(Video::getUserId, userId));
+        userVO.setVideoList(videoList);
         return userVO;
     }
 }
