@@ -3,6 +3,8 @@ package com.yubar.kedou.service;
 import com.yubar.kedou.domain.po.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
 * @author 兰豹基
 * @description 针对表【video】的数据库操作Service
@@ -10,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface VideoService extends IService<Video> {
 
+    List<Video> getVideoListDesc();
 }

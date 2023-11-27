@@ -6,8 +6,10 @@ package com.yubar.kedou.controller.user;
 
 import com.yubar.kedou.constant.JwtClaimsConstant;
 import com.yubar.kedou.domain.dto.UserLoginDTO;
+import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.domain.vo.UserLoginVO;
+import com.yubar.kedou.domain.vo.UserSignVO;
 import com.yubar.kedou.domain.vo.UserVO;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.properties.JwtProperties;
@@ -62,6 +64,29 @@ public class UserController {
                 .build();
 
         return Result.success(userLoginVO);
+    }
+
+    @Operation(description = "用户注册")
+    @PostMapping("/sign")
+    public Result<UserSignVO> sign(@RequestBody UserSignDTO userSignDTO) {
+        log.info("用户注册：{}", userSignDTO);
+
+        User user = userService.sign(userSignDTO);
+        //登录成功后，生成jwt令牌
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(JwtClaimsConstant.USER_ID, user.getId());
+        String token = JwtUtil.createJWT(
+                jwtProperties.getUserSecretKey(),
+                jwtProperties.getUserTtl(),
+                claims);
+
+        UserSignVO userSignVO = UserSignVO.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .token(token)
+                .build();
+
+        return Result.success(userSignVO);
     }
 
     @Operation(description = "查看用户")

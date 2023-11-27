@@ -22,6 +22,8 @@
             <result property="school" column="school" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="showFollowed" column="show_followed" jdbcType="INTEGER"/>
+            <result property="showFollowing" column="show_following" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -30,6 +32,7 @@
         likes,friends,following,
         follower,bio,address,
         sex,birthday,school,
-        status,create_time
+        status,create_time,show_followed,
+        show_following
     </sql>
 </mapper>

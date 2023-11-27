@@ -1,6 +1,7 @@
 package com.yubar.kedou.service;
 
 import com.yubar.kedou.domain.dto.UserLoginDTO;
+import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yubar.kedou.domain.vo.UserVO;
@@ -25,4 +26,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     UserVO getInfoById(Long userId);
+
+    User sign(UserSignDTO userSignDTO);
 }

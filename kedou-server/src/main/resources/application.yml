@@ -17,6 +17,7 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml # Mapper.xml文件地址，当前这个是默认值。
   type-aliases-package: com.yubar.kedou.mapper
 kedou:
+  profile: /static/logo_out.png  # 默认头像位置
   jwt:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: admin

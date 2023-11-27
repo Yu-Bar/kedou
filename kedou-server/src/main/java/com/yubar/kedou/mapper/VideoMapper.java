@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
 * @author 兰豹基
 * @description 针对表【video】的数据库操作Mapper
-* @createDate 2023-11-24 21:00:35
+* @createDate 2023-11-27 18:04:32
 * @Entity com.yubar.kedou.domain.po.Video
 */
 public interface VideoMapper extends BaseMapper<Video> {

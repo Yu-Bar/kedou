@@ -35,11 +35,15 @@ public class VideoController {
     @Autowired
     private VideoService videoService;
 
-    // TODO 按时间顺序倒序排列
+    /**
+     * 拉取视频列表
+     * @return
+     */
     @Operation(description = "查找视频")
     @GetMapping("/list")
     public Result<List<Video>> list(){
-        return Result.success(videoService.list());
+        List<Video> videoList = videoService.getVideoListDesc();
+        return Result.success(videoList);
     }
 
 

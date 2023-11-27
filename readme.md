@@ -42,13 +42,13 @@ BaseUrl : "/user/video"
   >
   >Body: 
 
-- [ ] 观看视频：
+- [ ] 观看视频：==无需登陆== 
 
-  - 个人主页下观看：需要指定用户ID，按时间倒序排列
+  - 个人主页下观看：需要指定用户ID，按**时间倒序**排列(在查询用户时，一并查询)
+  - 首页观看：无需指定用户ID，按**时间倒序**排列（分页查询）
+  - 还需要查询作者头像和作者昵称来展示：**所以在video表中冗余一条数据来保存作者头像url和作者昵称，但是在用户修改头像和昵称时需要注意要同时修改其发布视频的作者头像url** 
 
-  - 首页观看：无需指定用户ID，按时间倒序排列
-
-  >path: '/upload/{authorId}'
+  >path: '/list'
   >
   >method: GET
 
@@ -58,12 +58,11 @@ BaseUrl : "/user/video"
 
 BaseUrl : "/user/comment"
 
-- [ ] 查看评论：传入视频ID，返回评论列表
+- [ ] 查看评论：传入视频ID，返回评论列表 ==无需登陆== 
 
-    >path: '/{videoId}'
-    >
-    >method: GET
-    >
+  >path: '/{videoId}'
+  >
+  >method: GET
 
 - [ ] 提交评论：传入视频ID和评论内容
 
@@ -81,19 +80,33 @@ BaseUrl : "/user/user"
 
 - [x] 用户登陆（密码登录）：传入账号密码，返回用户对象
 
-    >path: '/login'
-    >
-    >method: GET
-    >
-    >Body: 
+  >path: '/login'
+  >
+  >method: POST
+  >
+  >Body: 
 
-- [x] 获取用户信息：传入用户ID，返回用户对象
+- [x] 获取用户信息：传入用户ID，返回用户对象 ==无需登陆（查看自己的需要登陆）== 
 
   >path: '/{userId}'
   >
   >method: GET
-  >
 
+- [x] 注册：传入账号密码，返回用户对象
+
+  >path: '/sign'
+  >
+  >method: POST
+  >
+  >Body: 
+
+- [ ] 设置个人信息：传入用户信息，修改用户信息
+
+  >path: '/update'
+  >
+  >method: PUT
+  >
+  >Body: 
 
 ### 4.4 关系模块
 
@@ -133,7 +146,7 @@ BaseUrl : "/user/relation"
 
 BaseUrl : "/user/likes"
 
-- [ ] 查看喜欢列表：传入用户ID，返回喜欢列表
+- [ ] 查看喜欢列表：传入用户ID，返回喜欢列表==无需登陆== 
 
   > path: '/{userId}'
   >
@@ -152,7 +165,7 @@ BaseUrl : "/user/likes"
 - [ ] 移除喜欢：传入用户ID和视频ID
 
   ==需要更新视频表中的喜欢数量== 
-  
+
   > path: '/'
   >
   > method: DELETE
@@ -202,13 +215,12 @@ BaseUrl : "/user/message"
   > method: POST
   >
   > Body:
-  
+
 - [ ] 获取消息：通过当前用户ID获取
 
   > path: '/'
   >
   > method: GET
-  >
 
 ### 4.8 分享模块
 
@@ -220,3 +232,51 @@ BaseUrl : "/user/message"
 
 ![数据库设计](.\doc\img\数据库设计.png)
 
+
+
+## 6 技巧总结
+
+### 6.1 前端篇
+
+#### 6.1.1 数据格式化
+
+Q：如何实现下面这样的数据格式化？
+
+<img src=".\doc\img\数据格式化.png" alt="数据格式化" style="float: left; zoom: 67%;" />
+
+要在 Vue 中动态绑定数据并根据数值进行特定的显示转换，可以使用计算属性或者在模板中使用过滤器来实现这个功能。
+
+```vue
+<template>
+  <div>
+    <p>{{ formatNumber(number) }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      number: 121000
+    };
+  },
+  computed: {
+    formatNumber() {
+      return (value) => {
+        if (value > 9999) {
+          return `${(value / 10000).toFixed(1)}万`;
+        } else {
+          return value.toString();
+        }
+      };
+    }
+  }
+};
+</script>
+```
+
+==注意：formatNumber这个函数式写在computed里面，而不是methods里面== 
+
+
+
+### 6.2 后端篇

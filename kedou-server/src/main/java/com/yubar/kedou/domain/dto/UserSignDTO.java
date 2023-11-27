@@ -7,8 +7,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@Schema(description = "用户登录时传递的数据模型")
-public class UserLoginDTO implements Serializable {
+@Schema(description = "用户注册时传递的数据模型")
+public class UserSignDTO implements Serializable {
 
     @Schema(description = "账户(username/phone)")
     private String account;

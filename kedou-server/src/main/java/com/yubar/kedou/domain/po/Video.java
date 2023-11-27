@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 public class Video implements Serializable {
     /**
-     * 用户ID
+     * 视频ID
      */
     @TableId(type = IdType.AUTO)
     private Long id;
@@ -25,6 +25,16 @@ public class Video implements Serializable {
      * 作者
      */
     private Long userId;
+
+    /**
+     * 作者昵称
+     */
+    private String nickname;
+
+    /**
+     * 作者头像url
+     */
+    private String profile;
 
     /**
      * 标题

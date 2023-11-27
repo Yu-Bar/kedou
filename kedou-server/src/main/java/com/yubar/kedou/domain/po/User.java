@@ -101,6 +101,16 @@ public class User implements Serializable {
      */
     private Date createTime;
 
+    /**
+     * 是否展示粉丝列表 0不展示 1展示
+     */
+    private Integer showFollowed;
+
+    /**
+     * 是否展示关注列表 0不展示 1展示
+     */
+    private Integer showFollowing;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

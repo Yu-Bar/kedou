@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.constant.MessageConstant;
 import com.yubar.kedou.constant.StatusConstant;
+import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.UserVO;
+import com.yubar.kedou.exception.AccountExsistException;
 import com.yubar.kedou.exception.AccountLockedException;
 import com.yubar.kedou.exception.AccountNotFoundException;
 import com.yubar.kedou.exception.PasswordErrorException;
@@ -17,6 +19,7 @@ import com.yubar.kedou.mapper.UserMapper;
 import com.yubar.kedou.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -32,7 +35,11 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
     @Autowired
-    VideoService videoService;
+    private VideoService videoService;
+    @Autowired
+    private UserMapper userMapper;
+    @Value("${kedou.profile}")
+    private  String defultProfile;
 
     /**
      * 用户登陆
@@ -89,9 +96,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         BeanUtil.copyProperties(user, userVO);
         // 查询用户发布视频
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        // 按发布时间倒序排列
+        wrapper.orderByDesc(Video::getCreateTime);
         List<Video> videoList = videoService.list(wrapper.eq(Video::getUserId, userId));
         userVO.setVideoList(videoList);
         return userVO;
+    }
+
+    @Override
+    public User sign(UserSignDTO userSignDTO) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        List<User> list = list(wrapper.eq(User::getUsername, userSignDTO.getAccount()));
+        if(!list.isEmpty())
+            throw new AccountExsistException(MessageConstant.ACCOUNT_ALREADY_EXIST);
+        User user = new User();
+        user.setUsername(userSignDTO.getAccount());
+        user.setNickname("新科抖");
+        user.setPassword(DigestUtils.md5DigestAsHex(userSignDTO.getPassword().getBytes()));
+        user.setBio("这小汁懒得很，什么都没有写");
+        System.out.println("defultProfile" + defultProfile);
+        user.setProfile(defultProfile);
+        userMapper.insertUser(user);
+        return user;
     }
 }
 

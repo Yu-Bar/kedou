@@ -7,6 +7,8 @@
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Video">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+            <result property="profile" column="profile" jdbcType="VARCHAR"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="cover" column="cover" jdbcType="VARCHAR"/>
@@ -21,10 +23,10 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,title,
-        url,cover,description,
-        likes,comments,star,
-        shares,create_time,status,
-        is_delete
+        id,user_id,nickname,
+        profile,title,url,
+        cover,description,likes,
+        comments,star,shares,
+        create_time,status,is_delete
     </sql>
 </mapper>
