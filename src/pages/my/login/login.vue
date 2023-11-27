@@ -8,15 +8,22 @@ export default {
         url: '/pages/my/login/loginWithPassword' // 跳转到其他页面
       });
     },
+    goBack() {
+      // 返回首页
+      uni.switchTab({
+        url: '/pages/index/index' // 切换到底部 TabBar 中的名为 home 的页面
+      });
+    },
   },
 };
 </script>
 
 <template>
+  <image src="/static/goback.png" @click="goBack" class="goback-icon" >后退</image>
   <view class="viewport">
     <view class="logo">
       <image
-          src="@/static/logo_out.png"
+          src="@/static/logo.png"
       ></image>
     </view>
     <view class="login">
@@ -189,5 +196,15 @@ view {
   font-size: 22rpx;
   color: #ffffff;
   text-align: center;
+}
+
+.goback-icon {
+  position: fixed;
+  top: 70rpx; /* 距离顶部的距离 */
+  left: 10rpx; /* 距离左侧的距离 */
+  width: 28px; /* 图片宽度 */
+  height: 28px; /* 图片高度 */
+  z-index: 9999; /* 图片层级 */
+  opacity: 80%;
 }
 </style>

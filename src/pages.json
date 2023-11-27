@@ -48,6 +48,7 @@
 			"path" : "pages/my/login/login",
 			"style" : 
 			{
+				"navigationStyle": "custom",
 				"navigationBarTitleText" : "登陆",
 				"enablePullDownRefresh" : false
 			}
@@ -56,7 +57,24 @@
 			"path" : "pages/my/login/loginWithPassword",
 			"style" : 
 			{
+				"navigationStyle": "custom",
 				"navigationBarTitleText" : "登陆",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "components/KedouSwiper",
+			"style" :
+			{
+				"navigationStyle": "custom",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/userspace/userspace",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
 				"enablePullDownRefresh" : false
 			}
 		}
@@ -68,10 +86,10 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
+		"textFontSize": 20, 
 		"color": "#bfbccb",
 		"backgroundColor": "#000000",
 		"selectedColor": "#c9eaff",
-		"fontSize": "50px",
 		"list": [{
 				"pagePath": "pages/index/index",
 				"text": "首页"
@@ -87,7 +105,7 @@
 			},
 			{
 				"pagePath": "pages/message/message",
-				"text": "信息"
+				"text": "消息"
 			},
 			{
 				"pagePath": "pages/my/my",

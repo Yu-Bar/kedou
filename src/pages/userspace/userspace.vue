@@ -11,33 +11,32 @@
       关注 |
       <text class="number" @click="showFollower(userInfo.follower)">{{ userInfo.follower }}</text>
       粉丝 |
-      <view style="display: inline-block;float: right">
-        <button class="button"  @click="logout">
-          <image class="icon_img" src="@/static/logout.png"></image>
-          退出
+      <view v-if="true/*checkFollow(userInfo.id)*/" style="display: inline-block;float: right">
+        <button class="button" @click="follow(userInfo.id)">
+          <image class="icon_img" src="@/static/follow.png"></image>
+          关注
+        </button>
+      </view>
+      <view v-else style="display: inline-block;float: right">
+        <button class="button" @click="unfollow(userInfo.id)">
+          <image class="icon_img" src="@/static/unfollow.png"></image>
+          已关注
         </button>
       </view>
     </uni-card>
 
     <uni-card :isFull="true">
-      <view class="info-container">
-        <view v-if="userInfo.address != null && userInfo.address != ''" class="info-item">
-          <image class="icon_img" src="@/static/address.png"></image>
-          {{ userInfo.address }} |
-        </view>
-        <view v-if="userInfo.school != null && userInfo.school != ''" class="info-item">
-          <image class="icon_img" src="@/static/school.png"></image>
-          {{ userInfo.school }} |
-        </view>
-        <view v-if="userInfo.sex != null && userInfo.sex != ''" class="info-item">
-          <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
-          <image v-else class="icon_img" src="@/static/female.png"></image> |
-        </view>
-        <button class="button" @click="setInfo">
-          <image class="icon_img" src="@/static/setting.png"></image>
-          设置
-        </button>
-      </view>
+      <image class="icon_img" src="@/static/address.png"></image>
+      {{ userInfo.address }} |
+      <image class="icon_img" src="@/static/school.png"></image>
+      {{ userInfo.school }} |
+      <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
+      <image v-else class="icon_img" src="@/static/female.png"></image>
+      |
+      <button class="button" style="float: right" @click="message(userInfo.id)">
+        <image class="icon_img" src="@/static/message.png"></image>
+        私信
+      </button>
     </uni-card>
 
     <view class="video-container">
@@ -85,17 +84,13 @@ export default {
         showCancel: false,
       })
     },
-    // 退出登陆
-    logout(){
-      console.log('退出按钮被点击');
-      this.memberStore.clearProfile();
-      console.log('用户数据已清除');
-      uni.navigateTo({
-        url: '/pages/my/login/login' // 跳转到其他页面
-      });
+    // TODO： 退出登陆
+    logout(videoId){
+
     },
+
     // TODO： 设置用户信息
-    setInfo(){
+    setInfo(videoId){
 
     },
 
@@ -176,8 +171,8 @@ export default {
 }
 
 .video-item {
-  width: calc(33.33% - 10rpx); /* 每行显示三个视频，考虑边距，这里设置为占据三分之一的宽度 */
-  margin-bottom: 10rpx; /* 设置视频项之间的下边距 */
+  width: calc(33.33% - 10px); /* 每行显示三个视频，考虑边距，这里设置为占据三分之一的宽度 */
+  margin-bottom: 10px; /* 设置视频项之间的下边距 */
   /* 可以添加其他样式，如边框、内边距等 */
 }
 
@@ -197,22 +192,12 @@ export default {
 
 .like-count {
   position: absolute; /* 设置绝对定位 */
-  bottom: 10rpx; /* 距离底部 5px */
-  left: 10rpx; /* 距离左侧 5px */
+  bottom: 5px; /* 距离底部 5px */
+  left: 5px; /* 距离左侧 5px */
   color: rgba(255, 255, 255, 0.75); /* 文字颜色 */
-  padding: 10rpx; /* 内边距 */
+  padding: 5px; /* 内边距 */
   font-size: 23rpx; /* 文字大小 */
   display: flex; /* 使用 flex 布局 */
-}
-
-.info-container {
-  display: flex;
-  flex-wrap: nowrap; /* 防止换行 */
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
 }
 
 </style>

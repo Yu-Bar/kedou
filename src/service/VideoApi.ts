@@ -5,8 +5,12 @@ export const getVideoLists = () => {
 	return http<VideoType[]>({
 		method: 'GET',
 		url: '/video/list',
-		data: {
+	})
+}
 
-		}
+export const getVideoListsWithAuthor = (id:number) => {
+	return http<VideoType[]>({
+		method: 'GET',
+		url: `/video/list?author=${id}`,
 	})
 }

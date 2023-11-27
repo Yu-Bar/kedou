@@ -1,27 +1,46 @@
 <template>
-  <view class="container">
-    <input v-model="account" type="text" placeholder="请输入账号" />
-    <input v-model="password" type="password" placeholder="请输入密码" />
-    <button @click="login">登录</button>
+  <image src="/static/goback.png" @click="goBack" class="goback-icon">后退</image>
+  <view class="container" :style="{ height: screenHeight + 'px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }">
+    <view class="logo">
+      <image
+          src="@/static/logo.png"
+      ></image>
+    </view>
+    <view class="input-container">
+      <view class="input-row">
+        <text class="label">账号：kedou_</text>
+        <input v-model="account" type="text" placeholder="请输入kedou号" class="input-field" />
+      </view>
+      <view class="input-row">
+        <text class="label">密码：</text>
+        <input v-model="password" type="password" placeholder="请输入密码" class="input-field" />
+      </view>
+    </view>
+    <button v-if="sign" @click="signIn" class="login-btn">注册</button>
+    <button v-else @click="login" class="login-btn">登录</button>
+    <text v-if="!sign" @click="transToSign">注册账号</text>
   </view>
 </template>
 
 <script>
-import {getVideoLists} from "@/service/VideoApi";
-import {postLoginPassWordAPI} from "@/service/LoginApi";
 import {useMemberStore} from "@/stores";
+import {postLoginPassWordAPI, signPassWordAPI} from "@/service/UserApi";
 
 export default {
   data() {
     return {
       account: '',
-      password: ''
+      password: '',
+      screenHeight: uni.getSystemInfoSync().windowHeight, // 获取屏幕高度
+      sign: false,
     };
   },
   methods: {
     async login() {
+      console.log('账号',this.account)
+      console.log('密码',this.password)
       const res = await postLoginPassWordAPI({
-        account: this.account,
+        account: 'kedou_' + this.account,
         password: this.password
       })
       if(res.code == 1){
@@ -37,25 +56,104 @@ export default {
         });
       }else{
           uni.showToast({
-            title: '登录失败，请检查账号和密码',
+            title: res.msg,
             icon: 'none'
           });
       }
+    },
+    // 注册
+    async signIn() {
+      const res = await signPassWordAPI({
+        account: 'kedou_' + this.account,
+        password: this.password
+      })
+      if(res.code == 1){
+        // console.log(res)
+        const memberStore = useMemberStore()
+        memberStore.setProfile(res.data)
+        uni.showToast({
+          icon: 'none',
+          title: '注册成功'
+        })
+        uni.switchTab({
+          url: '/pages/my/my' // 跳转到登录成功后的页面
+        });
+      }else{
+        uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        });
+      }
+    },
+    goBack() {
+      // 返回上一个页面
+      uni.navigateBack();
+    },
+    transToSign(){
+      this.sign =true;
     }
   }
 };
 </script>
 
 <style>
-/* 样式可以根据需要进行调整 */
 .container {
-  margin: 20px;
+  width: 100%;
+  background-color: #1f1f1f;
+  flex-direction: column;
+  color: #ffffff;
 }
 
-input,
-button {
-  margin-bottom: 10px;
-  width: 100%;
-  padding: 10px;
+.logo {
+  margin-bottom: 150rpx; /* 调整 Logo 与输入框之间的间距 */
+}
+
+image {
+  width: 220rpx;
+  height: 220rpx;
+  margin-top: 15vh;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 100rpx;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10rpx;
+}
+
+.label {
+  padding-right: 10rpx;
+}
+
+.input-field {
+  padding: 10rpx;
+  color: #ffffff;
+}
+
+.login-btn {
+  width: 60%;
+  padding: 30rpx;
+  font-size: 30rpx;
+  color: white;
+  border: none;
+  border-radius: 20rpx;
+  background-color: #00fad9;
+  background-image: linear-gradient(192deg, #00fad9 0%, #8EC5FC 50%, #E0C3FC 100%);
+  margin-bottom: 400rpx;
+}
+
+.goback-icon {
+  position: fixed;
+  top: 10rpx; /* 距离顶部的距离 */
+  left: 10rpx; /* 距离左侧的距离 */
+  width: 28px; /* 图片宽度 */
+  height: 28px; /* 图片高度 */
+  z-index: 9999; /* 图片层级 */
+  opacity: 80%;
 }
 </style>
