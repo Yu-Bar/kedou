@@ -16,11 +16,10 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		padding-top: 20px;
 		margin-bottom: 0%;
 		padding-bottom: 0%;
 		bottom: 0%;
-		background: none;
+		background: white;
 		height: 20%;
 	}
 </style>

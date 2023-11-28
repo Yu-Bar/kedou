@@ -47,15 +47,21 @@ export default {
         // console.log(res)
         const memberStore = useMemberStore()
         memberStore.setProfile(res.data)
-        uni.showToast({
+        await uni.showToast({
           icon: 'none',
-          title: '登陆成功'
+          title: `欢迎回到科抖，${res.data.nickname}`
         })
-        uni.switchTab({
-          url: '/pages/my/my' // 跳转到登录成功后的页面
+        uni.navigateBack({
+          delta: 2, // 关闭当前页面，如果是关闭上两个页面可以传入2
+          success: function () {
+            // 关闭成功的回调
+            uni.navigateTo({
+              url: '/pages/index/index?activeIndex=0'
+            })
+          }
         });
       }else{
-          uni.showToast({
+          await uni.showToast({
             title: res.msg,
             icon: 'none'
           });
@@ -71,23 +77,31 @@ export default {
         // console.log(res)
         const memberStore = useMemberStore()
         memberStore.setProfile(res.data)
-        uni.showToast({
+        await uni.showToast({
           icon: 'none',
-          title: '注册成功'
+          title: `欢迎来到科抖，${res.data.nickname}`
         })
-        uni.switchTab({
-          url: '/pages/my/my' // 跳转到登录成功后的页面
+        uni.navigateBack({
+          delta: 2, // 关闭当前页面，如果是关闭上两个页面可以传入2
+          success: function () {
+            // 关闭成功的回调
+            uni.navigateTo({
+              url: '/pages/index/index?activeIndex=0'
+            })
+          }
         });
       }else{
-        uni.showToast({
+        await uni.showToast({
           title: res.msg,
           icon: 'none'
         });
       }
     },
     goBack() {
-      // 返回上一个页面
-      uni.navigateBack();
+      // 返回主页
+      uni.redirectTo({
+        url: '/pages/index/index?activeIndex=0' // 跳转到首页页面
+      });
     },
     transToSign(){
       this.sign =true;

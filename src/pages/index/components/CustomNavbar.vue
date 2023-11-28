@@ -24,12 +24,12 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		padding-top: 20px;
+		padding-top: 0;
 		margin-bottom: 0%;
 		padding-bottom: 0%;
 		bottom: 0%;
 		background: none;
-		height: 20%;
+		//height: 20%;
 
 		.logo {
 			display: flex;

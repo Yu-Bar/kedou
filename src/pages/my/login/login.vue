@@ -5,13 +5,13 @@ export default {
   methods: {
     loginWithPassword() {
       uni.redirectTo({
-        url: '/pages/my/login/loginWithPassword' // 跳转到其他页面
+        url: '/pages/my/login/loginWithPassword' // 跳转到密码登陆页面
       });
     },
     goBack() {
       // 返回首页
-      uni.switchTab({
-        url: '/pages/index/index' // 切换到底部 TabBar 中的名为 home 的页面
+      uni.redirectTo({
+        url: '/pages/index/index?activeIndex=0' // 跳转到首页页面
       });
     },
   },

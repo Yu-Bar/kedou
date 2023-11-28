@@ -5,7 +5,7 @@
     <view class="video-swipper"  :style="videoStyle">
     <swiper vertical @change="swiperChange" :current="currentIndex" @animationfinish="handleTouchMove"
             style="width: 100vw; height: 100vh;">
-      <swiper-item v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">
+      <swiper-item  v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">
 
         <view class="video-indicator-container">
           <view class="indicator-group">
@@ -347,11 +347,6 @@ export default {
 </script>
 
 <style>
-page {
-  height: 100%;
-  background-color: #000000;
-}
-
 .video-indicator-container {
   opacity: 90%;
   position: fixed;
@@ -442,6 +437,7 @@ page {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  background: none;
 }
 
 /* 视频充满屏幕 */
@@ -458,7 +454,6 @@ page {
 view {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   margin-top: 0%;
-  color: #4cd964;
 }
 
 .goback-icon {
@@ -469,6 +464,7 @@ view {
   height: 28px; /* 图片高度 */
   z-index: 9999; /* 图片层级 */
   opacity: 80%;
+  background: none;
 }
 
 /* 评论输入框的样式 */
@@ -491,6 +487,7 @@ view {
 .comment-box.visible {
   transform: translateY(0);
   max-height: 50vh; /* 展开评论框 */
+  z-index: 9999;
 }
 
 .comment-list {
@@ -542,6 +539,7 @@ view {
 .video-swipper {
   position: relative;
   transition: transform 0.3s ease-in-out; /* 添加过渡动画效果 */
+  background: none;
 }
 
 /* 覆盖 uni-card 默认样式 */

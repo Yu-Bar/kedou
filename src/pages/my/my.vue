@@ -1,60 +1,62 @@
 <template>
-  <KedouBlankNavbar/>
-  <view v-if="userInfo">
-    <uni-card :title="userInfo.nickname" :isFull="true" :sub-title="userInfo.username" :extra="userInfo.bio"
-              :thumbnail="userInfo.profile">
-      <text class="number" @click="showLikes(userInfo.id)">{{ userInfo.likes }}</text>
-      获赞 |
-      <text class="number" @click="showFriends(userInfo.friends)">{{ userInfo.friends }}</text>
-      朋友 |
-      <text class="number" @click="showFollowing(userInfo.following)">{{ userInfo.following }}</text>
-      关注 |
-      <text class="number" @click="showFollower(userInfo.follower)">{{ userInfo.follower }}</text>
-      粉丝 |
-      <view style="display: inline-block;float: right">
-        <button class="button"  @click="logout">
-          <image class="icon_img" src="@/static/logout.png"></image>
-          退出
-        </button>
-      </view>
-    </uni-card>
+    <KedouBlankNavbar/>
+  <view class="my-style">
+    <view v-if="userInfo" >
+      <uni-card :title="userInfo.nickname" :isFull="true" :sub-title="userInfo.username" :extra="userInfo.bio"
+                :thumbnail="userInfo.profile">
+        <text class="number" @click="showLikes(userInfo.id)">{{ userInfo.likes }}</text>
+        获赞 |
+        <text class="number" @click="showFriends(userInfo.friends)">{{ userInfo.friends }}</text>
+        朋友 |
+        <text class="number" @click="showFollowing(userInfo.following)">{{ userInfo.following }}</text>
+        关注 |
+        <text class="number" @click="showFollower(userInfo.follower)">{{ userInfo.follower }}</text>
+        粉丝 |
+        <view style="display: inline-block;float: right">
+          <button class="button"  @click="logout">
+            <image class="icon_img" src="@/static/logout.png"></image>
+            退出
+          </button>
+        </view>
+      </uni-card>
 
-    <uni-card :isFull="true">
-      <view class="info-container">
-        <view v-if="userInfo.address != null && userInfo.address != ''" class="info-item">
-          <image class="icon_img" src="@/static/address.png"></image>
-          {{ userInfo.address }} |
+      <uni-card :isFull="true">
+        <view class="info-container">
+          <view v-if="userInfo.address != null && userInfo.address != ''" class="info-item">
+            <image class="icon_img" src="@/static/address.png"></image>
+            {{ userInfo.address }} |
+          </view>
+          <view v-if="userInfo.school != null && userInfo.school != ''" class="info-item">
+            <image class="icon_img" src="@/static/school.png"></image>
+            {{ userInfo.school }} |
+          </view>
+          <view v-if="userInfo.sex != null && userInfo.sex != ''" class="info-item">
+            <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
+            <image v-else class="icon_img" src="@/static/female.png"></image> |
+          </view>
+          <button class="button" @click="setInfo">
+            <image class="icon_img" src="@/static/setting.png"></image>
+            设置
+          </button>
         </view>
-        <view v-if="userInfo.school != null && userInfo.school != ''" class="info-item">
-          <image class="icon_img" src="@/static/school.png"></image>
-          {{ userInfo.school }} |
-        </view>
-        <view v-if="userInfo.sex != null && userInfo.sex != ''" class="info-item">
-          <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
-          <image v-else class="icon_img" src="@/static/female.png"></image> |
-        </view>
-        <button class="button" @click="setInfo">
-          <image class="icon_img" src="@/static/setting.png"></image>
-          设置
-        </button>
-      </view>
-    </uni-card>
+      </uni-card>
 
-    <view class="video-container">
-      <view v-for="(video, index) in userInfo.videoList" :key="index" class="video-item">
-        <view class="video-cover-container">
-          <!-- 显示视频封面 -->
-          <image :src="video.cover" @click="playVideo(index)" class="video-cover"></image>
-          <!-- 显示点赞量 -->
-          <view class="like-count">
-            <image class="icon_img" src="@/static/likes.png"></image>
-            <text>{{ video.likes }}</text>
+      <view class="video-container">
+        <view v-for="(video, index) in userInfo.videoList" :key="index" class="video-item">
+          <view class="video-cover-container">
+            <!-- 显示视频封面 -->
+            <image :src="video.cover" @click="playVideo(index)" class="video-cover"></image>
+            <!-- 显示点赞量 -->
+            <view class="like-count">
+              <image class="icon_img" src="@/static/likes.png"></image>
+              <text>{{ video.likes }}</text>
+            </view>
           </view>
         </view>
       </view>
     </view>
-
   </view>
+<!--  <KedouTabbar :activeIndex="4" class="custom-tab-bar"></KedouTabbar>-->
 </template>
 
 <script>
@@ -96,7 +98,7 @@ export default {
     },
     // TODO： 设置用户信息
     setInfo(){
-
+      console.log('设置')
     },
 
     // TODO: 播放视频
@@ -131,7 +133,13 @@ export default {
     // TODO: 私信(需要先写一个聊天页面，进行跳转）
     message(id) {
 
-    }
+    },
+
+    // 对应的底部 tab 被选中时执行
+    showByTab() {
+      console.log('进来了哦')
+      this.userInfo = this.getUser()
+    },
 
   },
   onShow() {
@@ -149,6 +157,11 @@ export default {
 </script>
 
 <style>
+.my-style {
+  background: white;
+  height: 100vh;
+}
+
 .icon_img {
   width: 28rpx;
   height: 28rpx;
