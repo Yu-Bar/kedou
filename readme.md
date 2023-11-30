@@ -32,7 +32,7 @@
 
 ### 4.0 通用接口
 
-- [ ] 上传视频、封面和头像 ：需要一个文件上传接口
+- [x] 上传视频、封面和头像 ：需要一个文件上传接口
 
   >path: '/common/upload'
   >
@@ -46,7 +46,7 @@
 
 BaseUrl : "/user/video"
 
-- [ ] 投稿视频 ：用mysql记录视频相关信息，OSS存储视频内容
+- [x] 投稿视频 ：用mysql记录视频相关信息，OSS存储视频内容
 
   >path: '/upload'
   >
@@ -54,7 +54,7 @@ BaseUrl : "/user/video"
   >
   >Body: 
 
-- [ ] 观看视频：==无需登陆== 
+- [x] 观看视频：==无需登陆== 
 
   - 个人主页下观看：需要指定用户ID，按**时间倒序**排列(在查询用户时，一并查询)
   - 首页观看：无需指定用户ID，按**时间倒序**排列（分页查询）
@@ -64,11 +64,15 @@ BaseUrl : "/user/video"
   >
   >method: GET
 
-  
+- [ ] 智能推送
+
+  ...待设计
+
+
 
 ### 4.2 评论模块
 
-BaseUrl : "/user/comment"
+BaseUrl : "/user/list/comment"
 
 - [ ] 查看评论：传入视频ID，返回评论列表 ==无需登陆== 
 
@@ -76,15 +80,25 @@ BaseUrl : "/user/comment"
   >
   >method: GET
 
+  - 缓存结构：
+
+    >key:
+    >
+    >value:
+    >
+    >ttl: -1
+
+  
+
 - [ ] 提交评论：传入视频ID和评论内容
 
   ==同时需要修改视频的评论数量== 
 
-  >path: '/upload/{videoId}'
+  >path: '/commit'
   >
   >method: POST
   >
-  >Body:
+  >Body: 
 
 ### 4.3 用户模块
 

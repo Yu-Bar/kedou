@@ -24,27 +24,35 @@
         <fastjson>1.2.76</fastjson>
         <jjwt>0.9.1</jjwt>
         <knife4j>3.0.3</knife4j>
+        <mybatis-plus>3.5.3.1</mybatis-plus>
+        <dynamic-datasource>3.5.0</dynamic-datasource>
+        <knife4j>4.3.0</knife4j>
+        <javax.xml.bind>2.4.0-b180830.0359</javax.xml.bind>
+        <hutool>5.8.20</hutool>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3.1</version>
+            <version>${mybatis-plus}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
-            <version>3.5.0</version>
+            <version>${dynamic-datasource}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <artifactId>spring-boot-starter-cache</artifactId>  		            		       	 <version>2.7.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
@@ -64,7 +72,7 @@
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-            <version>4.3.0</version>
+            <version>${knife4j}</version>
         </dependency>
 <!--        阿里云oss-->
         <dependency>
@@ -88,13 +96,13 @@
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.4.0-b180830.0359</version>
+            <version>${javax.xml.bind}</version>
         </dependency>
 <!--        hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.20</version>
+            <version>${hutool}</version>
         </dependency>
     </dependencies>
 

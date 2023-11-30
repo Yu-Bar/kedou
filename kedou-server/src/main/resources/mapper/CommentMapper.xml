@@ -9,12 +9,15 @@
             <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="videoId" column="video_id" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="likes" column="likes" jdbcType="BIGINT"/>
+            <result property="dislikes" column="dislikes" jdbcType="BIGINT"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,create_user,video_id,
-        content,is_delete,create_time
+        content,likes,dislikes,
+        is_delete,create_time
     </sql>
 </mapper>

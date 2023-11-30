@@ -1,14 +1,20 @@
 server:
   port: ${kedou.port:8077}
 spring:
+  profiles:
+    active: dev
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${kedou.datasource.host:localhost}:${kedou.datasource.port:3306}/${kedou.datasource.database:kedou}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
     username: ${kedou.datasource.username:root}
     password: ${kedou.datasource.password:123}
-  profiles:
-    active: dev
+  data:
+    redis:
+      host: ${kedou.redis.host:localhost}
+      port: ${kedou.redis.port:localhost}
+      password: ${kedou.redis.password:localhost}
+      database: ${kedou.redis.database:0}
   servlet:
     multipart:
       #配置单个文件上传大小的限制（SpringBoot中默认的限制是1MB）
@@ -36,7 +42,7 @@ kedou:
     user-secret-key: user
     user-ttl: 7200000
     user-token-name: authentication
-  alioss:
+  alioss: # 阿里云相关配置
     endpoint: ${kedou.alioss.endpoint}
     access-key-id: ${kedou.alioss.access-key-id}
     access-key-secret: ${kedou.alioss.access-key-secret}

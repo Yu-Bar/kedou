@@ -1,7 +1,11 @@
 package com.yubar.kedou.service;
 
+import com.yubar.kedou.domain.dto.CommentCommitDTO;
 import com.yubar.kedou.domain.po.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yubar.kedou.domain.vo.CommentVO;
+
+import java.util.List;
 
 /**
 * @author 兰豹基
@@ -10,4 +14,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface CommentService extends IService<Comment> {
 
+    /**
+     * 根据视频 ID 查询评论列表
+     * @param videoId
+     * @return
+     */
+    List<CommentVO> getByVideoId(Long videoId);
+
+    /**
+     * 发表评论
+     * @param commentCommitDTO
+     * @return
+     */
+    List<CommentVO> commitComment(CommentCommitDTO commentCommitDTO);
 }

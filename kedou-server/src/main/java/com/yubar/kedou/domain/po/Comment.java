@@ -37,6 +37,16 @@ public class Comment implements Serializable {
     private String content;
 
     /**
+     * 点赞数
+     */
+    private Long likes;
+
+    /**
+     * 点踩数
+     */
+    private Long dislikes;
+
+    /**
      * 0未删除 1删除
      */
     private Integer isDelete;

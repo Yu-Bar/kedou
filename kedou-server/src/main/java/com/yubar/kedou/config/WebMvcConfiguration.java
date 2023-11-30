@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
-
 import java.util.List;
 
 /**
@@ -41,10 +40,11 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //                .addPathPatterns("/admin/**")
 //                .excludePathPatterns("/admin/employee/login");
         registry.addInterceptor(jwtTokenUserInterceptor)
-        .addPathPatterns("/user/**")
-        .excludePathPatterns("/user/user/login")
-        .excludePathPatterns("/user/user/sign")
-        .excludePathPatterns("/user/video/list");
+                .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/login")
+                .excludePathPatterns("/user/user/sign")
+                .excludePathPatterns("/user/video/list")
+                .excludePathPatterns("/user/comment/list/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
