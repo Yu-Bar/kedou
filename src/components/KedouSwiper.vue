@@ -10,7 +10,7 @@
         <view class="video-indicator-container">
           <view class="indicator-group">
             <view class="video-indicator-item" style="margin-right: 10rpx">
-              <image :src="video.profile" @click="getIntoUserSpace(video.userId)" class="video-author-profile"  style="margin-right: 0;width: 90rpx; height: 90rpx"></image>
+              <image :src="video.profile" @click="getIntoUserSpace(video.createUser)" class="video-author-profile"  style="margin-right: 0;width: 90rpx; height: 90rpx"></image>
             </view>
           </view>
           <view class="indicator-group">
@@ -27,9 +27,9 @@
           </view>
         <view class="indicator-group">
           <view class="video-indicator-item">
-            <image src="/static/VideoIcon/white_star.png" @click="star(video.id)"></image>
+            <image src="/static/VideoIcon/white_star.png" @click="stars(video.id)"></image>
           </view>
-          <view class="indicator">{{ formatNumber(video.star) }}</view>
+          <view class="indicator">{{ formatNumber(video.stars) }}</view>
         </view>
         <view class="indicator-group">
           <view class="video-indicator-item">
@@ -230,6 +230,18 @@ export default {
         this.isPaused = false; // 更新视频状态
       }
     },
+    stopPlay(){
+      if (this.videoContext) {
+          this.videoContext.pause(); // 如果视频正在播放，则暂停视频
+          this.isPaused = true; // 更新视频状态
+        }
+    },
+    continuePlay(){
+      if (this.videoContext) {
+        this.videoContext.play(); // 如果视频处于暂停状态，则播放视频
+        this.isPaused = false; // 更新视频状态
+      }
+    },
     togglePlay() {
       // 隐藏评论
       if(this.isCommentVisible){
@@ -279,6 +291,9 @@ export default {
       // 点击评论按钮时切换评论输入框的显示状态
       this.isCommentVisible = !this.isCommentVisible;
       this.setVideoStyle()
+    },
+    getIntoUserSpace (userId) {
+      console.log('进入用户主页',userId)
     },
     comments(id){
       console.log('comments',id)
@@ -396,15 +411,18 @@ export default {
   width: 110rpx;
 }
 
-.video-author-nickname {
-  position: fixed;
-  bottom: 250rpx;
-  padding: 10px;
-  left: 0;
+.video-discription-container {
+  position: absolute;
+  bottom: 180rpx;
+  left: 10rpx;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  /* 设置 z-index 为较高的值 */
+  width: 100%;
+  max-width: 75%; /* 最大宽度为页面宽度的75% */
+}
+
+.video-author-nickname {
+  margin-bottom: 10px; /* 调整作者昵称与描述之间的间距 */
   z-index: 9999;
   background: none;
   color: #f7f6f5;
@@ -412,21 +430,14 @@ export default {
 }
 
 .video-description {
-  position: fixed;
-  bottom: 200rpx;
-  padding: 10px;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  /* 设置 z-index 为较高的值 */
-  z-index: 9999;
+
+  margin-top: -5px; /* 通过调整这个值来控制昵称和描述的间距 */
   background: none;
   color: #f7f6f5;
-}
-
-.video-discription-container {
-
+  overflow: hidden;
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  word-wrap: break-word; /* 允许单词内换行 */
+  overflow-wrap: break-word; /* 允许单词内换行，适用于更多浏览器 */
 }
 
 /* 使 video-container 占满整个页面 */

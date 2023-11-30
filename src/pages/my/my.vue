@@ -184,15 +184,17 @@ export default {
 .video-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  //justify-content: space-between;
+  justify-content: flex-start;
   /* 可以添加其他样式，如边距等 */
 }
 
 .video-item {
   width: calc(33.33% - 10rpx); /* 每行显示三个视频，考虑边距，这里设置为占据三分之一的宽度 */
-  margin-bottom: 10rpx; /* 设置视频项之间的下边距 */
+  /* margin-bottom: 1rpx;  设置视频项之间的下边距 */
   /* 可以添加其他样式，如边框、内边距等 */
 }
+
 
 /* TODO: 配合后端限制视频封面宽高比，让图片正常显示 */
 .video-cover {

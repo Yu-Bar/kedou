@@ -34,4 +34,8 @@ export type UserType = {
     status: number
     /** 发布视频列表 */
     videoList : VideoType[]
+    createTime : Date
+    updateTime : Date
+    showFollowed : number
+    showFollowing : number
 }

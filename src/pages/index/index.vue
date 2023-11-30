@@ -13,7 +13,10 @@
   <view class="tab-bar">
     <view v-for="(tab, index) in tabs" :key="index" @click="switchTab(index)" class="tar-bar-text">
       <image v-if="index === 2" :src="tab.iconPath" class="center-icon"/>
-      <text v-else :class="{'active': activeIndex === index}">{{ tab.text }}</text>
+      <image v-else-if="index === 0 && !isTextVisible" :src="tab.iconPath" class="reload-icon"/>
+      <text v-else :class="{'active': activeIndex === index}">
+          {{ index !== 0 || isTextVisible ? tab.text : ''}}
+      </text>
       <view v-if="index === 3 && showBadge" class="badge">{{ unreadCount }}</view>
     </view>
   </view>
@@ -25,6 +28,7 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import friend from "@/pages/friend/friend.vue";
 import message from "@/pages/message/message.vue";
 import my from "@/pages/my/my.vue";
+import {useMemberStore} from "@/stores";
 
 export default {
   data() {
@@ -32,14 +36,16 @@ export default {
       isActivePage: false, // 标记当前页面是否是活跃页面
       activeIndex: 0,
       tabs: [
-        {text: '首页'},
+        {text: '首页',iconPath: '/static/reload.png'},
         {text: '朋友'},
-        {iconPath: '/static/add.png', selectedIconPath: '/static/add.png'},
+        {iconPath: '/static/add.png'},
         {text: '消息'},
         {text: '我'}
       ],
       showBadge: false,
       unreadCount: 0,
+      memberStore: useMemberStore(),
+      isTextVisible: true // 控制文字和图标的显示切换
     };
   },
   components: {
@@ -94,8 +100,10 @@ export default {
       if (index === this.activeIndex) {
         console.log('switchTab重复点击', this.activeIndex);
         if (index === 0) {
-          // 如果当前点击的是已经首页，则执行刷新操作
-          console.log('执行刷新操作');
+          // TODO 如果当前点击的是已经首页，则执行刷新操作
+          this.$refs.tab0.reloadComponent()
+          console.log('执行刷新操作')
+          this.playAnimation()
         }
         // 更新未读消息数
         this.showBadge = false; // 将小红点隐藏
@@ -103,14 +111,38 @@ export default {
       } else {
         // 根据 tarbar 索引来判断点击了哪个页面
         if (index === 2) {
-          uni.navigateTo({
-            url: '/pages/publish/publish' // 跳转到 publish 页面
-          });
+          if(this.memberStore.profile != null){
+            uni.navigateTo({
+              url: '/pages/publish/publish' // 跳转到 publish 页面
+            });
+          }
+          else{
+            uni.navigateTo({
+              url: '/pages/my/login/login' // 跳转到 publish 页面
+            });
+          }
         }else{
+          console.log('index',index)
+          console.log('activeIndex',this.activeIndex)
+          // 回到主页时继续播放视频 切出主页时停止播放视频
+          if(index === 0){
+            this.$refs.tab0.continuePlay()
+          }else {
+            this.$refs.tab0.stopPlay()
+          }
           this.activeIndex = index
         }
       }
-    }
+    },
+    playAnimation() {
+      // 图片转换为图标并播放动画
+      this.isTextVisible = false;
+
+      // 设置定时器，在2秒后将图标切换回文字
+      setTimeout(() => {
+        this.isTextVisible = true;
+      }, 2000);
+    },
   },
   onLoad(options) {
     // console.log(options)
@@ -170,6 +202,14 @@ page {
   margin-bottom: 10rpx;
 }
 
+.reload-icon {
+  width: 55rpx;
+  height: 55rpx;
+  margin-bottom: 10rpx;
+  /* 添加旋转动画 */
+  animation: rotateAnimation 2.5s linear 0s 1 normal;
+}
+
 .badge {
   position: absolute;
   top: 8px;
@@ -184,5 +224,14 @@ page {
   align-items: center;
 }
 
+
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(1080deg); /* 绕中心旋转3圈 */
+  }
+}
 
 </style>
