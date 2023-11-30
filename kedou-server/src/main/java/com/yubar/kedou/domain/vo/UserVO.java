@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -61,6 +62,18 @@ public class UserVO implements Serializable {
     private Integer status;
 
     @Schema(description = "视频列表")
-    private List<Video> videoList;
+    private List<VideoVO> videoList;
+
+    @Schema(description = "注册时间")
+    private LocalDateTime createTime;
+
+    @Schema(description = "更新时间")
+    private LocalDateTime updateTime;
+
+    @Schema(description = "是否展示粉丝列表 0不展示 1展示")
+    private Integer showFollowed;
+
+    @Schema(description = "是否展示关注列表 0不展示 1展示")
+    private Integer showFollowing;
 
 }

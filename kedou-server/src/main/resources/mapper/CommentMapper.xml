@@ -6,15 +6,15 @@
 
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Comment">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="videoId" column="video_id" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,video_id,
-        content,create_time,is_delete
+        id,create_user,video_id,
+        content,is_delete,create_time
     </sql>
 </mapper>

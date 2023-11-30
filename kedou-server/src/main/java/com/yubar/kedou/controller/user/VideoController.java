@@ -6,16 +6,16 @@ package com.yubar.kedou.controller.user;
 
 
 
+import com.yubar.kedou.domain.dto.VideoPublishDTO;
 import com.yubar.kedou.domain.po.Video;
+import com.yubar.kedou.domain.vo.VideoVO;
 import com.yubar.kedou.service.VideoService;
 import com.yubar.kedou.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,9 +41,20 @@ public class VideoController {
      */
     @Operation(description = "查找视频")
     @GetMapping("/list")
-    public Result<List<Video>> list(){
-        List<Video> videoList = videoService.getVideoListDesc();
-        return Result.success(videoList);
+    public Result<List<VideoVO>> list(){
+        List<VideoVO> videoVoList = videoService.getVideoListDesc();
+        return Result.success(videoVoList);
+    }
+
+    /**
+     * 上传视频
+     * @return
+     */
+    @Operation(description = "上传视频")
+    @PostMapping("/upload")
+    public Result upload(@RequestBody VideoPublishDTO videoPublishDTO){
+        videoService.publish(videoPublishDTO);
+        return Result.success();
     }
 
 

@@ -6,27 +6,29 @@
 
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Video">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
-            <result property="profile" column="profile" jdbcType="VARCHAR"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="title" column="title" jdbcType="VARCHAR"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="cover" column="cover" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="likes" column="likes" jdbcType="BIGINT"/>
             <result property="comments" column="comments" jdbcType="BIGINT"/>
-            <result property="star" column="star" jdbcType="BIGINT"/>
+            <result property="stars" column="stars" jdbcType="BIGINT"/>
             <result property="shares" column="shares" jdbcType="BIGINT"/>
+            <result property="label" column="label" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+            <result property="open" column="open" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,nickname,
-        profile,title,url,
-        cover,description,likes,
-        comments,star,shares,
-        create_time,status,is_delete
+        id,create_user,title,
+        url,cover,description,
+        likes,comments,stars,
+        shares,label,create_time,
+        update_time,status,is_delete,
+        open
     </sql>
 </mapper>

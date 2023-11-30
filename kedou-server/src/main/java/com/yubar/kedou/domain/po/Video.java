@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -24,17 +24,7 @@ public class Video implements Serializable {
     /**
      * 作者
      */
-    private Long userId;
-
-    /**
-     * 作者昵称
-     */
-    private String nickname;
-
-    /**
-     * 作者头像url
-     */
-    private String profile;
+    private Long createUser;
 
     /**
      * 标题
@@ -69,7 +59,7 @@ public class Video implements Serializable {
     /**
      * 收藏
      */
-    private Long star;
+    private Long stars;
 
     /**
      * 分享
@@ -77,12 +67,22 @@ public class Video implements Serializable {
     private Long shares;
 
     /**
-     * 发布时间
+     * 标签名列表（以空格分隔）
      */
-    private Date createTime;
+    private String label;
 
     /**
-     * 视频状态 0封禁 1正常
+     * 发布时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 视频状态 0待审核 1审核未通过 2已发布 3封禁 
      */
     private Integer status;
 
@@ -90,6 +90,11 @@ public class Video implements Serializable {
      * 视频删除状态 0未删除 1删除
      */
     private Integer isDelete;
+
+    /**
+     * 公开状态 0私密 1公开
+     */
+    private Integer open;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

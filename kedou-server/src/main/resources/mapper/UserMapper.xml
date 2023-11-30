@@ -21,7 +21,9 @@
             <result property="birthday" column="birthday" jdbcType="DATE"/>
             <result property="school" column="school" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="showFollowed" column="show_followed" jdbcType="INTEGER"/>
             <result property="showFollowing" column="show_following" jdbcType="INTEGER"/>
     </resultMap>
@@ -32,7 +34,7 @@
         likes,friends,following,
         follower,bio,address,
         sex,birthday,school,
-        status,create_time,show_followed,
-        show_following
+        status,is_delete,create_time,
+        update_time,show_followed,show_following
     </sql>
 </mapper>

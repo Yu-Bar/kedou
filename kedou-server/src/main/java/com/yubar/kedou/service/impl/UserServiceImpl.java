@@ -8,12 +8,14 @@ import com.yubar.kedou.constant.StatusConstant;
 import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.UserVO;
+import com.yubar.kedou.domain.vo.VideoVO;
 import com.yubar.kedou.exception.AccountExsistException;
 import com.yubar.kedou.exception.AccountLockedException;
 import com.yubar.kedou.exception.AccountNotFoundException;
 import com.yubar.kedou.exception.PasswordErrorException;
 import com.yubar.kedou.domain.dto.UserLoginDTO;
 import com.yubar.kedou.domain.po.User;
+import com.yubar.kedou.mapper.VideoMapper;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.mapper.UserMapper;
 import com.yubar.kedou.service.VideoService;
@@ -35,7 +37,7 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
     @Autowired
-    private VideoService videoService;
+    private VideoMapper videoMapper;
     @Autowired
     private UserMapper userMapper;
     @Value("${kedou.profile}")
@@ -97,9 +99,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 查询用户发布视频
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
         // 按发布时间倒序排列
-        wrapper.orderByDesc(Video::getCreateTime);
-        List<Video> videoList = videoService.list(wrapper.eq(Video::getUserId, userId));
-        userVO.setVideoList(videoList);
+        wrapper.eq(Video::getCreateUser, userId)
+                .orderByDesc(Video::getCreateTime);
+        List<Video> videoList = videoMapper.selectList(wrapper);
+        List<VideoVO> videoVOList = BeanUtil.copyToList(videoList, VideoVO.class);
+        videoVOList.forEach(videoVO -> {
+            videoVO.setCreateUser(user.getId());
+            videoVO.setProfile(user.getProfile());
+            videoVO.setNickname(user.getNickname());
+        });
+        userVO.setVideoList(videoVOList);
         return userVO;
     }
 

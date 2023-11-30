@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Message">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="sender" column="sender" jdbcType="BIGINT"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="receiver" column="receiver" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="videoId" column="video_id" jdbcType="BIGINT"/>
@@ -14,7 +14,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,sender,receiver,
+        id,create_user,receiver,
         content,video_id,create_time
     </sql>
 </mapper>

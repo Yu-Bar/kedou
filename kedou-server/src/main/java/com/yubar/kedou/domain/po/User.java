@@ -5,7 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -42,12 +43,12 @@ public class User implements Serializable {
     private String phone;
 
     /**
-     * 
+     * 头像
      */
     private String profile;
 
     /**
-     * 
+     * 获赞
      */
     private Long likes;
 
@@ -84,7 +85,7 @@ public class User implements Serializable {
     /**
      * 
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 
@@ -92,14 +93,24 @@ public class User implements Serializable {
     private String school;
 
     /**
-     * 账号状态 0锁定 1正常
+     * 账号状态 0封禁1正常 2信息待完善
      */
     private Integer status;
 
     /**
+     * 账号是否删除 0正常 1销号
+     */
+    private Integer isDelete;
+
+    /**
      * 注册时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
 
     /**
      * 是否展示粉丝列表 0不展示 1展示

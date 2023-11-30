@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
@@ -24,7 +24,7 @@ public class Comment implements Serializable {
     /**
      * 发评论用户ID
      */
-    private Long userId;
+    private Long createUser;
 
     /**
      * 视频ID
@@ -37,14 +37,14 @@ public class Comment implements Serializable {
     private String content;
 
     /**
-     * 评论时间
-     */
-    private Date createTime;
-
-    /**
      * 0未删除 1删除
      */
     private Integer isDelete;
+
+    /**
+     * 评论时间
+     */
+    private LocalDateTime createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

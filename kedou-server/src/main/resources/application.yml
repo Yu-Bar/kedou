@@ -9,6 +9,13 @@ spring:
     password: ${kedou.datasource.password:123}
   profiles:
     active: dev
+  servlet:
+    multipart:
+      #配置单个文件上传大小的限制（SpringBoot中默认的限制是1MB）
+      max-file-size: 10MB
+      #配置单个请求大小的限制（一个请求可以上传多个文件）（SpringBoot中默认的限制是10MB）
+      max-request-size: 100MB
+
 #MyBatis-Plus相关配置
 mybatis-plus:
   configuration:
@@ -37,6 +44,10 @@ kedou:
   wechat:
     appid: ${kedou.wechat.appid}
     secret: ${kedou.wechat.secret}
+  upload:
+    mode: ${kedou.upload.mode}  # 上传文件模式：LOCAL:本地上传  CLOUD：云存储
+    base-path: ${kedou.upload.base-path} #如果使用本地上传，指定本地保存基路径
+    return-base-path: ${kedou.upload.return-base-path}
 
 # springdoc-openapi项目配置
 springdoc:

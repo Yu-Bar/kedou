@@ -1,7 +1,9 @@
 package com.yubar.kedou.service;
 
+import com.yubar.kedou.domain.dto.VideoPublishDTO;
 import com.yubar.kedou.domain.po.Video;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yubar.kedou.domain.vo.VideoVO;
 
 import java.util.List;
 
@@ -12,5 +14,15 @@ import java.util.List;
 */
 public interface VideoService extends IService<Video> {
 
-    List<Video> getVideoListDesc();
+    /**
+     * 按时间顺序倒序获取视频
+     * @return
+     */
+    List<VideoVO> getVideoListDesc();
+
+    /**
+     * 发布视频
+     * @param videoPublishDTO
+     */
+    void publish(VideoPublishDTO videoPublishDTO);
 }

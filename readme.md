@@ -24,11 +24,23 @@
 
 ## 3 架构设计
 
-![架构设计](.\doc\img\架构设计.png)
+<img src=".\doc\img\架构设计.png" alt="架构设计" style="zoom: 33%;" />
 
 
 
 ## 4 模块设计
+
+### 4.0 通用接口
+
+- [ ] 上传视频、封面和头像 ：需要一个文件上传接口
+
+  >path: '/common/upload'
+  >
+  >method: POST
+  >
+  >Body: MultipartFile
+
+  
 
 ### 4.1 视频模块
 
@@ -230,7 +242,7 @@ BaseUrl : "/user/message"
 
 ## 5 数据库设计
 
-![数据库设计](.\doc\img\数据库设计.png)
+<img src=".\doc\img\数据库设计.png" alt="数据库设计"  />
 
 
 

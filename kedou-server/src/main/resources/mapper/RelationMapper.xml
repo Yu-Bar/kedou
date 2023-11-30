@@ -6,13 +6,13 @@
 
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Relation">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="followId" column="follow_id" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,follow_id,
+        id,create_user,follow_id,
         create_time
     </sql>
 </mapper>
