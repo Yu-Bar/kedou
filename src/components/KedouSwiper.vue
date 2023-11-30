@@ -2,55 +2,56 @@
   <view>
     <!-- 返回按钮 -->
     <image v-if="startIndex !== null" src="/static/goback.png" @click="goBack" class="goback-icon">后退</image>
-    <view class="video-swipper"  :style="videoStyle">
-    <swiper vertical @change="swiperChange" :current="currentIndex" @animationfinish="handleTouchMove"
-            style="width: 100vw; height: 100vh;">
-      <swiper-item  v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">
+    <view class="video-swipper" :style="videoStyle">
+      <swiper vertical @change="swiperChange" :current="currentIndex" @animationfinish="handleTouchMove"
+              style="width: 100vw; height: 100vh;">
+        <swiper-item v-for="(video, index) in videoList" :key="index" style="width: 100vw; height: 100vh;">
 
-        <view class="video-indicator-container">
-          <view class="indicator-group">
-            <view class="video-indicator-item" style="margin-right: 10rpx">
-              <image :src="video.profile" @click="getIntoUserSpace(video.createUser)" class="video-author-profile"  style="margin-right: 0;width: 90rpx; height: 90rpx"></image>
+          <view class="video-indicator-container">
+            <view class="indicator-group">
+              <view class="video-indicator-item" style="margin-right: 10rpx">
+                <image :src="video.profile" @click="getIntoUserSpace(video.createUser)" class="video-author-profile"
+                       style="margin-right: 0;width: 90rpx; height: 90rpx"></image>
+              </view>
+            </view>
+            <view class="indicator-group">
+              <view class="video-indicator-item">
+                <image src="/static/VideoIcon/white_likes.png" @click="likes(video.id)"></image>
+              </view>
+              <view class="indicator">{{ formatNumber(video.likes) }}</view>
+            </view>
+            <view class="indicator-group">
+              <view class="video-indicator-item">
+                <image src="/static/VideoIcon/comment.png" @click="comments(video.id)"></image>
+              </view>
+              <view class="indicator">{{ formatNumber(video.comments) }}</view>
+            </view>
+            <view class="indicator-group">
+              <view class="video-indicator-item">
+                <image src="/static/VideoIcon/white_star.png" @click="stars(video.id)"></image>
+              </view>
+              <view class="indicator">{{ formatNumber(video.stars) }}</view>
+            </view>
+            <view class="indicator-group">
+              <view class="video-indicator-item">
+                <image src="/static/VideoIcon/share.png" @click="shares(video.id)"></image>
+              </view>
+              <view class="indicator">{{ formatNumber(video.shares) }}</view>
             </view>
           </view>
-          <view class="indicator-group">
-            <view class="video-indicator-item">
-              <image src="/static/VideoIcon/white_likes.png" @click="likes(video.id)"></image>
-            </view>
-            <view class="indicator">{{ formatNumber(video.likes) }}</view>
-          </view>
-          <view class="indicator-group">
-            <view class="video-indicator-item">
-              <image src="/static/VideoIcon/comment.png" @click="comments(video.id)"></image>
-            </view>
-            <view class="indicator">{{ formatNumber(video.comments) }}</view>
-          </view>
-        <view class="indicator-group">
-          <view class="video-indicator-item">
-            <image src="/static/VideoIcon/white_star.png" @click="stars(video.id)"></image>
-          </view>
-          <view class="indicator">{{ formatNumber(video.stars) }}</view>
-        </view>
-        <view class="indicator-group">
-          <view class="video-indicator-item">
-            <image src="/static/VideoIcon/share.png" @click="shares(video.id)"></image>
-          </view>
-          <view class="indicator">{{ formatNumber(video.shares) }}</view>
-        </view>
-        </view>
 
-        <view class="video-container" :style="{ top: videoTop }">
-          <video :id="'myVideo' + index" :src="video.url" @ended="replayCurrentVideo"
-                 controls class="fullscreen-video" @tap="togglePlay" :show-progress="false" :show-play-btn="false"
-                 :show-fullscreen-btn="false" :show-mute-btn="false" @loadedmetadata="loadVideo"
-                 :show-center-play-btn="false"></video>
-        </view>
-        <view class="video-discription-container" v-if="!isCommentVisible">
-          <view class="video-author-nickname">@{{video.nickname}}</view>
-          <view class="video-description">{{video.title}}。{{video.description}}</view>
-        </view>
-      </swiper-item>
-    </swiper>
+          <view class="video-container" :style="{ top: videoTop }">
+            <video :id="'myVideo' + index" :src="video.url" @ended="replayCurrentVideo"
+                   controls class="fullscreen-video" @tap="togglePlay" :show-progress="false" :show-play-btn="false"
+                   :show-fullscreen-btn="false" :show-mute-btn="false" @loadedmetadata="loadVideo"
+                   :show-center-play-btn="false"></video>
+          </view>
+          <view class="video-discription-container" v-if="!isCommentVisible">
+            <view class="video-author-nickname">@{{ video.nickname }}</view>
+            <view class="video-description">{{ video.title }}。{{ video.description }}</view>
+          </view>
+        </swiper-item>
+      </swiper>
 
     </view>
     <!-- 评论列表容器 -->
@@ -58,16 +59,26 @@
     <view class="comment-box" :class="{ 'visible': isCommentVisible }">
 
       <!-- 已有评论列表 -->
-      <view v-if="commentList.length > 0" class="comment-list">
-        <scroll-view scroll-y="true" class="scroll-Y" >
-        <view v-for="(comment, index) in commentList" :key="index" class="comment-item">
-          <uni-card :title="comment.nickname" :isFull="true" :sub-title="comment.content"
-                    :thumbnail="comment.profile" class="custom-card">
-              <text>{{ comment.create_time }}</text>
-              <text>{{ comment.likes }}</text>
-              <text>{{ comment.unlikes }}</text>
+      <view v-if="commentList !== null" class="comment-list">
+        <scroll-view scroll-y="true" class="scroll-Y">
+          <view v-for="(comment, index) in commentList" :key="index" class="comment-item">
+            <uni-card :title="comment.nickname" :isFull="true" :sub-title="comment.content"
+                      :thumbnail="comment.profile" class="custom-card">
+              <text>{{ formattedDateTime(comment.createTime) }}</text>
+              <view class="comment-like-dislike">
+                <image class="comment-mini-icon" src="/static/VideoIcon/like_gray.png"
+                       @click="like_comment(comment.id)"></image>
+                <text>{{ comment.likes }}</text>
+                <image class="comment-mini-icon" src="/static/VideoIcon/dislike_gray.png"
+                       @click="dislike_comment(comment.id)"></image>
+                <text>{{ comment.dislikes }}</text>
+              </view>
+            </uni-card>
+          </view>
+          <uni-card>
+              <text>暂无更多评论，发一条吧</text>
+              <text>...</text>
           </uni-card>
-        </view>
         </scroll-view>
       </view>
       <view v-else class="no-comment">
@@ -76,8 +87,8 @@
       <!-- 评论输入框内容 -->
       <!-- 此处放置评论输入框的内容 -->
       <view class="comment-commit">
-        <textarea class="comment-input" placeholder="善语结善缘，恶言伤人心"></textarea>
-        <button class="submit-button">发送</button>
+        <textarea v-model="commentContent" class="comment-input" placeholder="善语结善缘，恶言伤人心"></textarea>
+        <button class="submit-button" @click="sendComment(this.videoList[this.currentIndex].id)">发送</button>
       </view>
     </view>
 
@@ -86,6 +97,7 @@
 
 <script>
 import {getVideoLists} from "@/service/VideoApi";
+import {commitComment, getCommentListByVideoId} from "@/service/CommentApi";
 
 // let authorId;
 export default {
@@ -108,87 +120,25 @@ export default {
       startIndex: null,
       commentListHeight: 0, // 评论列表容器高度，用于控制展示或收缩
       isCommentVisible: false,  // 是否显示评论列表
+      commentContent: '',
       // TODO 已有的评论列表数据
       commentList: [
-      //     {
-      //   nickname: 'hhh',
-      //   content: 'haoshuai',
-      //   profile: '/static/logo_out.png',
-      //   likes: 50,
-      //   unlikes: 100,
-      // },
-      // {
-      //   nickname: '兰豹',
-      //   content: '爱了爱了',
-      //   profile: '/static/logo_out.png',
-      //   likes: 50,
-      //   unlikes: 100,
-      // },
-      // {
-      //   nickname: 'YUbar',
-      //   content: '好帅',
-      //   profile: '/static/logo_out.png',
-      //   likes: 50,
-      //   unlikes: 100,
-      // },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-      //   {
-      //     nickname: 'YUbar',
-      //     content: '好帅',
-      //     profile: '/static/logo_out.png',
-      //     likes: 50,
-      //     unlikes: 100,
-      //   },
-
-    ]
+        {
+          nickname: '加载中',
+          content: '加载中',
+          profile: '/static/logo_out.png',
+          createTime: '加载中',
+          likes: 0,
+          dislikes: 0,
+        }
+      ]
     };
   },
   computed: {
     formatNumber() {
       return (value) => {
         if (value > 9999) {
-          let formattedNumber = (value/10000).toFixed(1); // 将数字格式化为指定位数的小数
+          let formattedNumber = (value / 10000).toFixed(1); // 将数字格式化为指定位数的小数
           if (formattedNumber.endsWith('.0')) {
             formattedNumber = formattedNumber.slice(0, -2); // 去掉小数末尾的'.0'
           }
@@ -199,17 +149,60 @@ export default {
         }
       };
     },
+    // 格式化时间展示格式
+    formattedDateTime() {
+      return (dateTimesStr) => {
+        // 将后端返回的时间字符串转换为 Date 对象
+        const dateTime = new Date(dateTimesStr);
+
+        // 获取当前时间
+        const now = new Date();
+
+        // 计算时间差值
+        const diffTime = now - dateTime;
+        const diffMinutes = Math.floor(diffTime / (1000 * 60));
+        const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffMinutes < 1) {
+          // 1分钟以内的时间展示为 '刚刚'
+          return '刚刚';
+        } else if (diffHours < 1) {
+          // 1小时以内的时间展示为 'n分钟前'
+          return `${diffMinutes}分钟前`;
+        } else if (diffDays < 1) {
+          // 今天的时间展示 'n小时前'
+          return `${diffHours}小时前`;
+        } else if (diffDays === 1 && diffTime < 24 * 60 * 60 * 1000) {
+          // 昨天但时间未超过24小时的展示 '昨天 小时:分钟'
+          const hours = dateTime.getHours().toString().padStart(2, '0');
+          const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+          return `昨天 ${hours}:${minutes}`;
+        } else if (diffDays >= 1 && diffDays < 2) {
+          // 24小时-48小时之间的展示为 '1天前'
+          return '1天前';
+        } else if (diffDays >= 2 && diffDays < 3) {
+          // 48小时-72小时之间的展示为 '2天前'
+          return '2天前';
+        } else if (diffDays >= 3 && diffDays < 4) {
+          // 72小时-96小时之间的展示为 '3天前'
+          return '3天前';
+        } else if (diffDays >= 4 && diffTime < now - new Date(`${now.getFullYear()}-01-01`)) {
+          // 超出96小时后，在今年的就展示为‘月-日’
+          const month = dateTime.getMonth() + 1;
+          const day = dateTime.getDate();
+          return `${month}-${day}`;
+        } else {
+          // 今年以前的展示为‘年-月-日’
+          const year = dateTime.getFullYear();
+          const month = dateTime.getMonth() + 1;
+          const day = dateTime.getDate();
+          return `${year}-${month}-${day}`;
+        }
+      }
+    }
   },
   methods: {
-    // handleTouchMove() {
-    //   // 滑动结束后重新定位视频元素的位置
-    //   console.log(this.currentIndex);
-    //   uni.pageScrollTo({
-    //   	scrollTop: 0,
-    // 	duration: 300
-    //   });
-    // 	console.log(this.currentIndex);
-    // },
     swiperChange(e) {
       const prevIndex = this.currentIndex; // 记录上一个视频的索引
       this.currentIndex = e.detail.current;
@@ -230,13 +223,13 @@ export default {
         this.isPaused = false; // 更新视频状态
       }
     },
-    stopPlay(){
+    stopPlay() {
       if (this.videoContext) {
-          this.videoContext.pause(); // 如果视频正在播放，则暂停视频
-          this.isPaused = true; // 更新视频状态
-        }
+        this.videoContext.pause(); // 如果视频正在播放，则暂停视频
+        this.isPaused = true; // 更新视频状态
+      }
     },
-    continuePlay(){
+    continuePlay() {
       if (this.videoContext) {
         this.videoContext.play(); // 如果视频处于暂停状态，则播放视频
         this.isPaused = false; // 更新视频状态
@@ -244,10 +237,9 @@ export default {
     },
     togglePlay() {
       // 隐藏评论
-      if(this.isCommentVisible){
+      if (this.isCommentVisible) {
         this.toggleComment()
-      }
-      else{
+      } else {
         // 暂停视频
         // console.log(this.videoContext);
         if (this.videoContext) {
@@ -282,7 +274,7 @@ export default {
       // console.log("getVideoData",res.data)
       // console.log("videoList",this.videoList)
     },
-    reloadComponent(){
+    reloadComponent() {
       console.log("请求后端视频")
       this.getVideoData()
       this.currentIndex = 0
@@ -292,12 +284,25 @@ export default {
       this.isCommentVisible = !this.isCommentVisible;
       this.setVideoStyle()
     },
-    getIntoUserSpace (userId) {
-      console.log('进入用户主页',userId)
+    getIntoUserSpace(userId) {
+      console.log('进入用户主页', userId)
     },
-    comments(id){
-      console.log('comments',id)
+    async comments(id) {
+      console.log('comments', id)
+      const res = await getCommentListByVideoId(id)
+      this.commentList = res.data
       this.toggleComment()
+    },
+    // 发表评论
+    async sendComment(videoId){
+      if (this.commentContent.trim() !== ''){
+        const res = await commitComment({
+          videoId: videoId,
+          content: this.commentContent.trim()
+        })
+        this.commentList = res.data
+        this.commentContent = ''
+      }
     },
     setVideoStyle() {
       // 在评论弹出时设置视频内容的样式
@@ -384,7 +389,7 @@ export default {
   background: none;
 }
 
-.video-author-profile{
+.video-author-profile {
   border-radius: 50%; /* 将图片裁剪为圆形 */
   width: 100rpx;
   height: 100rpx;
@@ -504,7 +509,6 @@ view {
 .comment-list {
   position: relative;
   background: none;
-  margin-bottom: 100rpx;
 }
 
 .comment-item {
@@ -518,7 +522,7 @@ view {
   background: #fff;
   display: flex;
   bottom: 0;
-  height: 90rpx;
+  height: 120rpx;
   width: 100%;
 }
 
@@ -527,7 +531,7 @@ view {
   margin: 10rpx;
   padding: 10rpx;
   border-radius: 20rpx;
-  height: 30rpx;
+  height: 50rpx;
   color: black;
   background: #f3f3f3;
 }
@@ -570,6 +574,15 @@ view {
   color: black;
   margin-top: 300rpx;
   align-items: center; /* 垂直居中 */
+}
+
+.comment-like-dislike {
+  float: right;
+}
+
+.comment-mini-icon {
+  width: 28rpx;
+  height: 28rpx;
 }
 </style>
   
