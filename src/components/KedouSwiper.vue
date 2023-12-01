@@ -29,7 +29,8 @@
             </view>
             <view class="indicator-group">
               <view class="video-indicator-item">
-                <image src="/static/VideoIcon/white_star.png" @click="stars(video.id)"></image>
+                <image v-if="video.isStar" src="/static/VideoIcon/star.png" @click="disStar(video.id)"></image>
+                <image v-else src="/static/VideoIcon/white_star.png" @click="star(video.id)"></image>
               </view>
               <view class="indicator">{{ formatNumber(video.stars) }}</view>
             </view>
@@ -100,6 +101,7 @@
 import {getVideoLists} from "@/service/VideoApi";
 import {commitComment, getCommentListByVideoId} from "@/service/CommentApi";
 import {dislikeVideo, likeVideo} from "@/service/LikesApi";
+import {disStarVideo, starVideo} from "@/service/StarsApi";
 
 // let authorId;
 export default {
@@ -317,6 +319,34 @@ export default {
         })
       }
     },
+    // 喜欢视频
+    async star(id) {
+      const res = await starVideo(id)
+      if(res.code == 1){
+        this.videoList[this.currentIndex].isStar = true
+        this.videoList[this.currentIndex].stars++
+      }
+      else{
+        await uni.showToast({
+          title: '喜欢失败，请检查网络',
+          icon: 'error'
+        })
+      }
+    },
+
+    async disStar(id) {
+      const res = await disStarVideo(id)
+      if(res.code == 1) {
+        this.videoList[this.currentIndex].isStar = false
+        this.videoList[this.currentIndex].stars--
+      }
+      else {
+        await uni.showToast({
+          title: '取消喜欢失败，请检查网络',
+          icon: 'error'
+        })
+      }
+    },
 
     toggleComment() {
       // 点击评论按钮时切换评论列表的显示状态
@@ -350,27 +380,6 @@ export default {
         this.commentContent = ''
       }
     },
-    // TODO 收藏视频
-    // async star(id) {
-    //   const res = await likeVideo(id)
-    //   if(res.code == 1)
-    //     this.videoList[this.currentIndex].isLike = true
-    //   else
-    //     await uni.showToast({
-    //       title: '喜欢失败，请检查网络',
-    //       icon: 'error'
-    //     })
-    // },
-    // async disStar(id) {
-    //   const res = await dislikeVideo(id)
-    //   if(res.code == 1)
-    //     this.videoList[this.currentIndex].isLike = false
-    //   else
-    //     await uni.showToast({
-    //       title: '取消喜欢失败，请检查网络',
-    //       icon: 'error'
-    //     })
-    // },
     setVideoStyle() {
       // 在评论弹出时设置视频内容的样式
       if (this.isCommentVisible) {

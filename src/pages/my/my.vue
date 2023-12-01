@@ -62,7 +62,7 @@
                 <!-- 显示点赞量 -->
                 <view class="like-count">
                   <image class="icon_img" src="@/static/likes.png"></image>
-                  <text>{{ video.likes }}</text>
+                  <text>{{ formatNumber(video.likes) }}</text>
                 </view>
               </view>
             </view>
@@ -78,7 +78,23 @@
               <!-- 显示点赞量 -->
               <view class="like-count">
                 <image class="icon_img" src="@/static/likes.png"></image>
-                <text>{{ video.likes }}</text>
+                <text>{{ formatNumber(video.likes) }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <scroll-view class="nav-content" scroll-y="true" v-show="currentTab === '收藏'">
+        <view class="video-container">
+          <view v-for="(video, index) in starVideoList" :key="index" class="video-item">
+            <view class="video-cover-container">
+              <!-- 显示视频封面 -->
+              <image :src="video.cover" @click="playStarVideo(index)" class="video-cover"></image>
+              <!-- 显示点赞量 -->
+              <view class="like-count">
+                <image class="icon_img" src="@/static/likes.png"></image>
+                <text>{{ formatNumber(video.likes) }}</text>
               </view>
             </view>
           </view>
@@ -95,6 +111,7 @@
 import {useMemberStore} from '@/stores'
 import {getUserInfoById} from "@/service/UserApi";
 import {getLikeVideoList, likeVideo} from "@/service/LikesApi";
+import {getStarVideoList} from "@/service/StarsApi";
 
 export default {
   data() {
@@ -105,7 +122,24 @@ export default {
       navTitles: ['作品', '私密', '收藏', '喜欢'],
       videoContainerHeight: 'calc(100vh - 260rpx)',
       likeVideoList: [],
+      starVideoList: [],
     }
+  },
+  computed: {
+    formatNumber() {
+      return (value) => {
+        if (value > 9999) {
+          let formattedNumber = (value / 10000).toFixed(1); // 将数字格式化为指定位数的小数
+          if (formattedNumber.endsWith('.0')) {
+            formattedNumber = formattedNumber.slice(0, -2); // 去掉小数末尾的'.0'
+          }
+          return `${formattedNumber}万`
+        } else {
+          // console.log('format3')
+          return value.toString();
+        }
+      };
+    },
   },
   methods: {
     // 异步请求获取用户信息
@@ -127,11 +161,26 @@ export default {
         })
       }
     },
+    async getStarList() {
+      const res = await getStarVideoList(this.userInfo.id)
+      if(res.code == 1)
+        this.starVideoList = res.data
+      else {
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
     switchContent(title) {
       this.currentTab = title;
       // 查看喜欢列表
-      if(title === '喜欢' && this.likeVideoList.length === 0){
+      if(title === '喜欢'){
        this.getLikesList()
+      }
+      // 查看收藏列表
+      if(title === '收藏'){
+        this.getStarList()
       }
     },
     showLikes() {
@@ -157,7 +206,6 @@ export default {
 
     // 根据视频 ID 进行播放操作
     playVideo(videoNum) {
-      console.log('播放视频', videoNum)
       // 跳转至视频播放页面
       uni.navigateTo({
         url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.userInfo.videoList))}&videoNum=${videoNum}`
@@ -165,10 +213,16 @@ export default {
     },
 
     playLikeVideo(videoNum) {
-      console.log('播放视频', videoNum)
       // 跳转至视频播放页面
       uni.navigateTo({
         url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.likeVideoList))}&videoNum=${videoNum}`
+      });
+    },
+
+    playStarVideo(videoNum) {
+      // 跳转至视频播放页面
+      uni.navigateTo({
+        url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.starVideoList))}&videoNum=${videoNum}`
       });
     },
 
@@ -205,7 +259,9 @@ export default {
           url: '/pages/my/login/login' // 跳转到登陆页面
         });
       }else{
-        this.userInfo = this.getUser()
+        if(this.userInfo === null)
+          this.getUser()
+        this.reloadInfo()
         console.log('监听onReloadMyInfo')
         // 监听自定义事件 onBackPress
         uni.$on('onReloadMyInfo', this.reloadInfo);
@@ -214,11 +270,11 @@ export default {
     // 返回页面时重新加载信息
     reloadInfo() {
       console.log('重新加载用户信息')
-      this.userInfo = this.getUser()
-      if(this.likeVideoList.length !== 0)
-          this.getLikesList()
+      if(this.currentTab == '喜欢')
+        this.getLikesList()
+      if(this.currentTab == '收藏')
+        this.getStarList()
     }
-
   },
   // onShow() {
   //   console.log('进来了哦')
