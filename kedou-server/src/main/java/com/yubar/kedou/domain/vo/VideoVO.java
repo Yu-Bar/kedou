@@ -73,4 +73,10 @@ public class VideoVO implements Serializable {
    @Schema(description = "公开状态 0私密 1公开")
     private Integer open;
 
+    @Schema(description = "当前用户是否已喜欢该视频")
+    private Boolean isLike;
+
+    @Schema(description = "当前用户是否已收藏该视频")
+    private Boolean isStar;
+
 }

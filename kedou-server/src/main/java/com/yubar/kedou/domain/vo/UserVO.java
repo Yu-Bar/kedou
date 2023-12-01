@@ -70,6 +70,12 @@ public class UserVO implements Serializable {
     @Schema(description = "更新时间")
     private LocalDateTime updateTime;
 
+    @Schema(description = "是否展示喜欢列表 0不展示 1展示")
+    private Integer showLikes;
+
+    @Schema(description = "是否展示收藏列表 0不展示 1展示")
+    private Integer showStars;
+
     @Schema(description = "是否展示粉丝列表 0不展示 1展示")
     private Integer showFollowed;
 

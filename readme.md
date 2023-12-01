@@ -54,7 +54,7 @@ BaseUrl : "/user/video"
   >
   >Body: 
 
-- [x] 观看视频：==无需登陆== 
+- [x] 观看视频：==无需登陆，但是登陆了也要传递用户信息，用于检查用户对视频的喜欢和收藏情况== 
 
   - 个人主页下观看：需要指定用户ID，按**时间倒序**排列(在查询用户时，一并查询)
   - 首页观看：无需指定用户ID，按**时间倒序**排列（分页查询）
@@ -64,6 +64,12 @@ BaseUrl : "/user/video"
   >
   >method: GET
 
+- [ ] 查看个人私密视频
+
+  > path: '/privacy'
+  >
+  > method: GET
+  
 - [ ] 智能推送
 
   ...待设计
@@ -74,7 +80,7 @@ BaseUrl : "/user/video"
 
 BaseUrl : "/user/list/comment"
 
-- [ ] 查看评论：传入视频ID，返回评论列表 ==无需登陆== 
+- [x] 查看评论：传入视频ID，返回评论列表 ==无需登陆== 
 
   >path: '/{videoId}'
   >
@@ -82,23 +88,30 @@ BaseUrl : "/user/list/comment"
 
   - 缓存结构：
 
-    >key:
+    >String ttl: -1
     >
-    >value:
+    >key: comment::视频ID
     >
-    >ttl: -1
+    >value: 评论列表
 
-  
+- [x] 提交评论：传入视频ID和评论内容
 
-- [ ] 提交评论：传入视频ID和评论内容
-
-  ==同时需要修改视频的评论数量== 
+  ==同时需要修改视频的评论数量以及刷新评论缓存== 
 
   >path: '/commit'
   >
   >method: POST
   >
   >Body: 
+  
+- [ ] 删除评论：传入评论ID
+
+  ==前后端同时都要校验这条评论是否是用户所发or是否是视频创作者的视频下的评论== 
+
+  >path: '/delete/{commentId}'
+  >
+  >method: DELETE
+  >
 
 ### 4.3 用户模块
 
@@ -140,17 +153,23 @@ BaseUrl : "/user/relation"
 
 - [ ] 查看关注列表：传入用户ID，返回关注列表
 
+  ==需要校验是否为本人 or 关注列表是否公开== 
+
   >path: '/following/{userId}'
   >
   >method: GET
 
 - [ ] 查看粉丝列表：传入用户ID，返回粉丝列表
 
+  ==需要校验是否为本人 or 粉丝列表是否公开== 
+
   >path: '/follower/{userId}'
   >
   >method: GET
 
 - [ ] 查看朋友列表：传入用户ID，返回朋友列表
+
+  ==需要校验是否为本人== 
 
   >path: '/friend/{userId}'
   >
@@ -172,13 +191,17 @@ BaseUrl : "/user/relation"
 
 BaseUrl : "/user/likes"
 
-- [ ] 查看喜欢列表：传入用户ID，返回喜欢列表==无需登陆== 
+- [x] 查看喜欢列表：传入用户ID，返回喜欢列表 ==无需登陆== 
 
-  > path: '/{userId}'
+  ==需要校验是否为本人 or 喜欢列表是否公开== 
+
+  > path: '/list'
   >
   > method: GET
+  >
+  > params: userId
 
-- [ ] 添加喜欢：传入用户ID和视频ID
+- [x] 添加喜欢：传入视频ID
 
   ==需要更新视频表中的喜欢数量== 
 
@@ -186,9 +209,9 @@ BaseUrl : "/user/likes"
   >
   > method: POST
   >
-  > Params: 
+  > Params: videoId
 
-- [ ] 移除喜欢：传入用户ID和视频ID
+- [x] 移除喜欢：传入视频ID
 
   ==需要更新视频表中的喜欢数量== 
 
@@ -196,7 +219,7 @@ BaseUrl : "/user/likes"
   >
   > method: DELETE
   >
-  > Params: 
+  > Params: videoId
 
 ### 4.6 收藏模块
 
@@ -204,11 +227,15 @@ BaseUrl : "/user/star"
 
 - [ ] 查看收藏列表：传入用户ID，返回收藏列表
 
-  > path: '/{userId}'
+  ==需要校验是否为本人 or 收藏列表是否公开== 
+
+  > path: '/list'
   >
   > method: GET
+  >
+  > params: userId
 
-- [ ] 添加收藏：传入用户ID和视频ID
+- [ ] 添加收藏：传入视频ID
 
   ==需要更新视频表中的收藏数量== 
 
@@ -216,9 +243,9 @@ BaseUrl : "/user/star"
   >
   > method: POST
   >
-  > Params: 
+  > Params: videoId
 
-- [ ] 移除收藏：传入用户ID和视频ID
+- [ ] 移除收藏：传入视频ID
 
   ==需要更新视频表中的收藏数量== 
 
@@ -226,7 +253,7 @@ BaseUrl : "/user/star"
   >
   > method: DELETE
   >
-  > Params: 
+  > Params: videoId
 
 ### 4.7 消息模块
 

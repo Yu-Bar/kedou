@@ -4,10 +4,15 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.constant.VideoStatusConstant;
+import com.yubar.kedou.context.BaseContext;
 import com.yubar.kedou.domain.dto.VideoPublishDTO;
+import com.yubar.kedou.domain.po.Likes;
+import com.yubar.kedou.domain.po.Star;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.VideoVO;
+import com.yubar.kedou.mapper.LikesMapper;
+import com.yubar.kedou.mapper.StarMapper;
 import com.yubar.kedou.mapper.UserMapper;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.service.VideoService;
@@ -30,7 +35,12 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
 
     @Autowired
     private UserMapper userMapper;
-    @Autowired VideoMapper videoMapper;
+    @Autowired
+    private VideoMapper videoMapper;
+    @Autowired
+    private LikesMapper likesMapper;
+    @Autowired
+    private StarMapper starMapper;
 
     /**
      * 按时间顺序倒序获取视频
@@ -38,8 +48,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
      */
     @Override
     public List<VideoVO> getVideoListDesc() {
+        // 查找视频
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(Video::getCreateTime);
+        wrapper.eq(Video::getIsDelete, 0)
+                .orderByDesc(Video::getCreateTime);
+        // 封装对象
         List<Video> videoList = list(wrapper);
         List<VideoVO> videoVOList = BeanUtil.copyToList(videoList, VideoVO.class);
         videoVOList.forEach(videoVO -> {
@@ -47,6 +60,23 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
             videoVO.setCreateUser(user.getId());
             videoVO.setProfile(user.getProfile());
             videoVO.setNickname(user.getNickname());
+
+            if(BaseContext.getCurrentId() != null){
+                // 查看视频喜欢状态
+                LambdaQueryWrapper<Likes> likesWrapper = new LambdaQueryWrapper<>();
+                likesWrapper.eq(Likes::getCreateUser, BaseContext.getCurrentId());
+                likesWrapper.eq(Likes::getVideoId, videoVO.getId());
+                Likes likes = likesMapper.selectOne(likesWrapper);
+                if(likes != null && likes.getIsDelete() == 0)
+                    videoVO.setIsLike(true);
+                // 查看视频收藏状态
+                LambdaQueryWrapper<Star> starWrapper = new LambdaQueryWrapper<>();
+                starWrapper.eq(Star::getCreateUser, BaseContext.getCurrentId());
+                starWrapper.eq(Star::getVideoId, videoVO.getId());
+                Star star = starMapper.selectOne(starWrapper);
+                if(star != null && star.getIsDelete() == 0)
+                    videoVO.setIsStar(true);
+            }
         });
         return videoVOList;
     }

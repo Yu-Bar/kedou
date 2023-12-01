@@ -6,7 +6,7 @@ package com.yubar.kedou.constant;
 
 /**
  *@ClassName VideoStatusConstant
- *@Description TODO
+ *@Description 视频状态常量
  *@Author Yu-Bar
  *@Date 2023/11/29 12:19
  *@Version 1.0

@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.domain.dto.CommentCommitDTO;
 import com.yubar.kedou.domain.po.Comment;
 import com.yubar.kedou.domain.po.User;
+import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.CommentVO;
 import com.yubar.kedou.mapper.UserMapper;
+import com.yubar.kedou.mapper.VideoMapper;
 import com.yubar.kedou.service.CommentService;
 import com.yubar.kedou.mapper.CommentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
     UserMapper userMapper;
     @Autowired
     CommentMapper commentMapper;
+    @Autowired
+    VideoMapper videoMapper;
 
     /**
      * 根据视频 ID 查询评论列表
@@ -56,10 +60,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
      */
     @Override
     public List<CommentVO> commitComment(CommentCommitDTO commentCommitDTO) {
+        // 插入评论
         Comment comment = new Comment();
         BeanUtil.copyProperties(commentCommitDTO,comment);
         commentMapper.insertComment(comment);
-        return getByVideoId(comment.getVideoId());
+        // 查新的评论列表
+        List<CommentVO> commentVOList = getByVideoId(comment.getVideoId());
+        // 返回新的评论数
+        Video video = new Video();
+        video.setId(commentCommitDTO.getVideoId());
+        video.setComments((long)commentVOList.size());
+        videoMapper.updateById(video);
+        return commentVOList;
     }
 }
 

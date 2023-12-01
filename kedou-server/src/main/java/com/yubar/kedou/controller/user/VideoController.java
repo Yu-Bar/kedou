@@ -36,7 +36,7 @@ public class VideoController {
     private VideoService videoService;
 
     /**
-     * 拉取视频列表
+     * 拉取视频列表 需要拉取视频是否已收藏或已喜欢
      * @return
      */
     @Operation(description = "查找视频")

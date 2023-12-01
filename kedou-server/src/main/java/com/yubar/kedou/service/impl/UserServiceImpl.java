@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.constant.MessageConstant;
 import com.yubar.kedou.constant.StatusConstant;
+import com.yubar.kedou.context.BaseContext;
 import com.yubar.kedou.domain.dto.UserSignDTO;
+import com.yubar.kedou.domain.po.Likes;
+import com.yubar.kedou.domain.po.Star;
 import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.UserVO;
 import com.yubar.kedou.domain.vo.VideoVO;
@@ -15,10 +18,11 @@ import com.yubar.kedou.exception.AccountNotFoundException;
 import com.yubar.kedou.exception.PasswordErrorException;
 import com.yubar.kedou.domain.dto.UserLoginDTO;
 import com.yubar.kedou.domain.po.User;
+import com.yubar.kedou.mapper.LikesMapper;
+import com.yubar.kedou.mapper.StarMapper;
 import com.yubar.kedou.mapper.VideoMapper;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.mapper.UserMapper;
-import com.yubar.kedou.service.VideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +44,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private VideoMapper videoMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private LikesMapper likesMapper;
+    @Autowired
+    private StarMapper starMapper;
+
     @Value("${kedou.profile}")
     private  String defultProfile;
 
@@ -107,6 +116,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             videoVO.setCreateUser(user.getId());
             videoVO.setProfile(user.getProfile());
             videoVO.setNickname(user.getNickname());
+            if(BaseContext.getCurrentId() != null){
+                // 查看视频喜欢状态
+                LambdaQueryWrapper<Likes> likesWrapper = new LambdaQueryWrapper<>();
+                likesWrapper.eq(Likes::getCreateUser, BaseContext.getCurrentId());
+                likesWrapper.eq(Likes::getVideoId, videoVO.getId());
+                Likes likes = likesMapper.selectOne(likesWrapper);
+                if(likes != null && likes.getIsDelete() == 0)
+                    videoVO.setIsLike(true);
+                // 查看视频收藏状态
+                LambdaQueryWrapper<Star> starWrapper = new LambdaQueryWrapper<>();
+                starWrapper.eq(Star::getCreateUser, BaseContext.getCurrentId());
+                starWrapper.eq(Star::getVideoId, videoVO.getId());
+                Star star = starMapper.selectOne(starWrapper);
+                if(star != null && star.getIsDelete() == 0)
+                    videoVO.setIsStar(true);
+            }
         });
         userVO.setVideoList(videoVOList);
         return userVO;

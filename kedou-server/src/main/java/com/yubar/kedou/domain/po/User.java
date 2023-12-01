@@ -113,6 +113,16 @@ public class User implements Serializable {
     private LocalDateTime updateTime;
 
     /**
+     * 是否展示喜欢列表 0不展示 1展示
+     */
+    private Integer showLikes;
+
+    /**
+     * 是否展示收藏列表 0不展示 1展示
+     */
+    private Integer showStars;
+
+    /**
      * 是否展示粉丝列表 0不展示 1展示
      */
     private Integer showFollowed;

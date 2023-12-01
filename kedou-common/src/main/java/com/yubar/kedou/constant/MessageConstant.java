@@ -13,5 +13,9 @@ public class MessageConstant {
     public static final String USER_NOT_LOGIN = "用户未登录";
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String LIMIT_SIZE = "限制大小";
+    public static final String LIKES_NOT_VISIBLE = "喜欢列表不可见";
+    public static final String STARS_NOT_VISIBLE = "收藏列表不可见";
+    public static final String FOLLOWING_NOT_VISIBLE = "关注列表不可见";
+    public static final String FOLLOWED_NOT_VISIBLE = "粉丝列表不可见";
 
 }

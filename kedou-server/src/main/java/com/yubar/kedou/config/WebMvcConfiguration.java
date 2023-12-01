@@ -2,6 +2,7 @@ package com.yubar.kedou.config;
 
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import com.yubar.kedou.interceptor.GettingFreeJwtTokenUserInterceptor;
 import com.yubar.kedou.interceptor.JwtTokenUserInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //    private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
     @Autowired
     private JwtTokenUserInterceptor jwtTokenUserInterceptor;
+    @Autowired
+    private GettingFreeJwtTokenUserInterceptor gettingFreeJwtTokenUserInterceptor;
 
 
     /**
@@ -41,10 +44,16 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //                .excludePathPatterns("/admin/employee/login");
         registry.addInterceptor(jwtTokenUserInterceptor)
                 .addPathPatterns("/user/**")
+                .excludePathPatterns("/user/user/*")
+                .excludePathPatterns("/user/video/list")
+                .excludePathPatterns("/user/comment/list/**")
+                .excludePathPatterns("/user/likes/**");
+        registry.addInterceptor(gettingFreeJwtTokenUserInterceptor)
+                .addPathPatterns("/user/user/*")
                 .excludePathPatterns("/user/user/login")
                 .excludePathPatterns("/user/user/sign")
-                .excludePathPatterns("/user/video/list")
-                .excludePathPatterns("/user/comment/list/**");
+                .addPathPatterns("/user/video/list")
+                .addPathPatterns("/user/likes/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 
