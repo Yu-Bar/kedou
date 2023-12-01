@@ -52,15 +52,23 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Video::getIsDelete, 0)
                 .orderByDesc(Video::getCreateTime);
-        // 封装对象
         List<Video> videoList = list(wrapper);
+        // 封装对象
+        return videoList2VideoVoList(videoList);
+    }
+
+    /**
+     * 封装VO对象
+     * @param videoList
+     * @return
+     */
+    public List<VideoVO> videoList2VideoVoList(List<Video> videoList){
         List<VideoVO> videoVOList = BeanUtil.copyToList(videoList, VideoVO.class);
         videoVOList.forEach(videoVO -> {
             User user = userMapper.selectById(videoVO.getCreateUser());
             videoVO.setCreateUser(user.getId());
             videoVO.setProfile(user.getProfile());
             videoVO.setNickname(user.getNickname());
-
             if(BaseContext.getCurrentId() != null){
                 // 查看视频喜欢状态
                 LambdaQueryWrapper<Likes> likesWrapper = new LambdaQueryWrapper<>();

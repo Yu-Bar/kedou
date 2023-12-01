@@ -6,14 +6,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yubar.kedou.constant.MessageConstant;
 import com.yubar.kedou.context.BaseContext;
 import com.yubar.kedou.domain.po.Likes;
+import com.yubar.kedou.domain.po.Star;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.domain.po.Video;
 import com.yubar.kedou.domain.vo.VideoVO;
 import com.yubar.kedou.exception.PermissionException;
+import com.yubar.kedou.mapper.StarMapper;
 import com.yubar.kedou.mapper.UserMapper;
 import com.yubar.kedou.mapper.VideoMapper;
 import com.yubar.kedou.service.LikesService;
 import com.yubar.kedou.mapper.LikesMapper;
+import com.yubar.kedou.service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +39,10 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes>
     VideoMapper videoMapper;
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    StarMapper starMapper;
+    @Autowired
+    VideoService videoService;
 
     /**
      * 添加喜欢
@@ -108,18 +115,12 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes>
         wrapper.eq(Likes::getCreateUser, userId)
                 .eq(Likes::getIsDelete, 0);
         List<Likes> likesList = list(wrapper);
+        if(likesList == null || likesList.isEmpty())
+            return null;
         // 查询喜欢视频列表
         List<Video> videoList = videoMapper.selectBatchIds(likesList.stream().map(Likes::getVideoId).toList());
         // 封装结果
-        List<VideoVO> videoVOList = BeanUtil.copyToList(videoList, VideoVO.class);
-        videoVOList.forEach(videoVO -> {
-            User user = userMapper.selectById(videoVO.getCreateUser());
-            videoVO.setCreateUser(user.getId());
-            videoVO.setProfile(user.getProfile());
-            videoVO.setNickname(user.getNickname());
-            videoVO.setIsLike(true);
-        });
-        return videoVOList;
+        return videoService.videoList2VideoVoList(videoList);
     }
 }
 

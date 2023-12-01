@@ -47,13 +47,15 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .excludePathPatterns("/user/user/*")
                 .excludePathPatterns("/user/video/list")
                 .excludePathPatterns("/user/comment/list/**")
-                .excludePathPatterns("/user/likes/**");
+                .excludePathPatterns("/user/likes/**")
+                .excludePathPatterns("/user/star/**");
         registry.addInterceptor(gettingFreeJwtTokenUserInterceptor)
                 .addPathPatterns("/user/user/*")
                 .excludePathPatterns("/user/user/login")
                 .excludePathPatterns("/user/user/sign")
                 .addPathPatterns("/user/video/list")
-                .addPathPatterns("/user/likes/**");
+                .addPathPatterns("/user/likes/**")
+                .addPathPatterns("/user/star/**");
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 

@@ -21,6 +21,13 @@ public interface VideoService extends IService<Video> {
     List<VideoVO> getVideoListDesc();
 
     /**
+     * 封装返回对象
+     * @param videoList
+     * @return
+     */
+    List<VideoVO> videoList2VideoVoList(List<Video> videoList);
+
+    /**
      * 发布视频
      * @param videoPublishDTO
      */
