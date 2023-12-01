@@ -16,7 +16,8 @@
             </view>
             <view class="indicator-group">
               <view class="video-indicator-item">
-                <image src="/static/VideoIcon/white_likes.png" @click="likes(video.id)"></image>
+                <image v-if="video.isLike" src="/static/VideoIcon/likes.png" @click="dislikes(video.id)"></image>
+                <image v-else src="/static/VideoIcon/white_likes.png" @click="likes(video.id)"></image>
               </view>
               <view class="indicator">{{ formatNumber(video.likes) }}</view>
             </view>
@@ -98,6 +99,7 @@
 <script>
 import {getVideoLists} from "@/service/VideoApi";
 import {commitComment, getCommentListByVideoId} from "@/service/CommentApi";
+import {dislikeVideo, likeVideo} from "@/service/LikesApi";
 
 // let authorId;
 export default {
@@ -121,6 +123,7 @@ export default {
       commentListHeight: 0, // 评论列表容器高度，用于控制展示或收缩
       isCommentVisible: false,  // 是否显示评论列表
       commentContent: '',
+      autoPlay: true,
       // TODO 已有的评论列表数据
       commentList: [
         {
@@ -214,7 +217,8 @@ export default {
           prevVideoContext.pause();
         }
       }
-      this.videoContext.play();
+      if(this.autoPlay)
+        this.videoContext.play();
     },
     replayCurrentVideo() {
       if (this.videoContext) {
@@ -258,11 +262,18 @@ export default {
     loadVideo() {
       // 当视频加载元数据后触发，此时视频已经可以播放
       this.videoContext = uni.createVideoContext(`myVideo${this.currentIndex}`, this);
-      this.videoContext.play();
+      if(this.autoPlay)
+        this.videoContext.play();
     },
     goBack() {
       // 返回上一个页面
-      uni.navigateBack();
+      uni.navigateBack({
+        delta: 1,
+        success: () => {
+          console.log('事件emit')
+          uni.$emit('onReloadMyInfo'); // 触发自定义事件 onReloadInfo，刷新用户信息
+        }
+      });
     },
     // showVideoLists() {
     //   console.log("btn",this.videoList)
@@ -271,27 +282,60 @@ export default {
       const res = await getVideoLists()
       // this.$set(this, 'videoList', res.data)
       this.videoList = res.data
-      // console.log("getVideoData",res.data)
-      // console.log("videoList",this.videoList)
     },
     reloadComponent() {
       console.log("请求后端视频")
       this.getVideoData()
       this.currentIndex = 0
     },
+
+    // 喜欢视频
+    async likes(id) {
+      const res = await likeVideo(id)
+      if(res.code == 1){
+        this.videoList[this.currentIndex].isLike = true
+        this.videoList[this.currentIndex].likes++
+      }
+    else{
+        await uni.showToast({
+          title: '喜欢失败，请检查网络',
+          icon: 'error'
+        })
+      }
+    },
+
+    async dislikes(id) {
+      const res = await dislikeVideo(id)
+      if(res.code == 1) {
+        this.videoList[this.currentIndex].isLike = false
+        this.videoList[this.currentIndex].likes--
+      }
+      else {
+        await uni.showToast({
+          title: '取消喜欢失败，请检查网络',
+          icon: 'error'
+        })
+      }
+    },
+
     toggleComment() {
-      // 点击评论按钮时切换评论输入框的显示状态
+      // 点击评论按钮时切换评论列表的显示状态
       this.isCommentVisible = !this.isCommentVisible;
       this.setVideoStyle()
     },
+
+    // TODO 进入用户主页
     getIntoUserSpace(userId) {
       console.log('进入用户主页', userId)
     },
+
     async comments(id) {
       console.log('comments', id)
       const res = await getCommentListByVideoId(id)
       this.commentList = res.data
       this.toggleComment()
+      //更新评论数量
+      this.videoList[this.currentIndex].comments = this.commentList.length
     },
     // 发表评论
     async sendComment(videoId){
@@ -301,9 +345,32 @@ export default {
           content: this.commentContent.trim()
         })
         this.commentList = res.data
+        //更新评论数量
+        this.videoList[this.currentIndex].comments = this.commentList.length
         this.commentContent = ''
       }
     },
+    // TODO 收藏视频
+    // async star(id) {
+    //   const res = await likeVideo(id)
+    //   if(res.code == 1)
+    //     this.videoList[this.currentIndex].isLike = true
+    //   else
+    //     await uni.showToast({
+    //       title: '喜欢失败，请检查网络',
+    //       icon: 'error'
+    //     })
+    // },
+    // async disStar(id) {
+    //   const res = await dislikeVideo(id)
+    //   if(res.code == 1)
+    //     this.videoList[this.currentIndex].isLike = false
+    //   else
+    //     await uni.showToast({
+    //       title: '取消喜欢失败，请检查网络',
+    //       icon: 'error'
+    //     })
+    // },
     setVideoStyle() {
       // 在评论弹出时设置视频内容的样式
       if (this.isCommentVisible) {

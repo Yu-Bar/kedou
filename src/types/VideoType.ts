@@ -17,6 +17,8 @@ export type VideoType = {
     updateTime: Date
     status: number
     open: number
+    isLike: boolean
+    isStar: boolean
 }
 
 // 上传视频时传输给服务器的数据类型

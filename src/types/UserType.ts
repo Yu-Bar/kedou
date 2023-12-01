@@ -36,6 +36,8 @@ export type UserType = {
     videoList : VideoType[]
     createTime : Date
     updateTime : Date
+    showLikes : number
+    showStars : number
     showFollowed : number
     showFollowing : number
 }

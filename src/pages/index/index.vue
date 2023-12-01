@@ -2,7 +2,7 @@
 
     <view class="content">
       <!--      <CustomNavbar />-->
-      <KedouSwiper class="kedou-swiper-component" ref="tab0" v-show="activeIndex === 0"/>
+      <KedouSwiper class="kedou-swiper-component" ref="tab0" v-show="activeIndex === 0 && !reloadingVideo"/>
       <friend ref="tab1" v-show="activeIndex === 1"/>
       <message ref="tab3" v-show="activeIndex === 3"/>
       <my ref="tab4" v-show="activeIndex === 4"/>
@@ -45,7 +45,8 @@ export default {
       showBadge: false,
       unreadCount: 0,
       memberStore: useMemberStore(),
-      isTextVisible: true // 控制文字和图标的显示切换
+      isTextVisible: true ,// 控制文字和图标的显示切换
+      reloadingVideo: false
     };
   },
   components: {
@@ -73,8 +74,8 @@ export default {
   watch: {
     // 监听子组件显示属性的变化
     activeIndex(newValue, oldValue) {
-      console.log('newValue', newValue)
-      console.log('oldValue', oldValue)
+      // console.log('newValue', newValue)
+      // console.log('oldValue', oldValue)
       switch (newValue) {
         case 1:
           this.$refs.tab1.showByTab();
@@ -100,9 +101,12 @@ export default {
       if (index === this.activeIndex) {
         console.log('switchTab重复点击', this.activeIndex);
         if (index === 0) {
-          // TODO 如果当前点击的是已经首页，则执行刷新操作
-          this.$refs.tab0.reloadComponent()
+          // 如果当前点击的是已经首页，则执行刷新操作
           console.log('执行刷新操作')
+          this.$refs.tab0.stopPlay()
+          this.$refs.tab0.autoPlay = false
+          this.reloadingVideo = true
+          this.$refs.tab0.reloadComponent()
           this.playAnimation()
         }
         // 更新未读消息数
@@ -136,12 +140,16 @@ export default {
     },
     playAnimation() {
       // 图片转换为图标并播放动画
-      this.isTextVisible = false;
-
+      this.isTextVisible = false
+      setTimeout(() => {
+        this.reloadingVideo = false
+        this.$refs.tab0.continuePlay()
+        this.$refs.tab0.autoPlay = true
+      }, 500);
       // 设置定时器，在2秒后将图标切换回文字
       setTimeout(() => {
-        this.isTextVisible = true;
-      }, 2000);
+        this.isTextVisible = true
+      }, 1200);
     },
   },
   onLoad(options) {
@@ -207,7 +215,7 @@ page {
   height: 55rpx;
   margin-bottom: 10rpx;
   /* 添加旋转动画 */
-  animation: rotateAnimation 2.5s linear 0s 1 normal;
+  animation: rotateAnimation 1.5s linear 0s 1 normal;
 }
 
 .badge {
