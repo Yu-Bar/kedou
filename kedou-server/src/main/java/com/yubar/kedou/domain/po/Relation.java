@@ -22,14 +22,19 @@ public class Relation implements Serializable {
     private Long id;
 
     /**
-     * 
+     * 关注者
      */
     private Long createUser;
 
     /**
-     * 
+     * 被关注者
      */
     private Long followId;
+
+    /**
+     * 
+     */
+    private Integer isDelete;
 
     /**
      * 

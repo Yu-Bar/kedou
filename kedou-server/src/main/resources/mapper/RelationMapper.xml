@@ -8,11 +8,12 @@
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="createUser" column="create_user" jdbcType="BIGINT"/>
             <result property="followId" column="follow_id" jdbcType="BIGINT"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,create_user,follow_id,
-        create_time
+        is_delete,create_time
     </sql>
 </mapper>

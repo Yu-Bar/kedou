@@ -77,9 +77,12 @@ public class UserVO implements Serializable {
     private Integer showStars;
 
     @Schema(description = "是否展示粉丝列表 0不展示 1展示")
-    private Integer showFollowed;
+    private Integer showFollower;
 
     @Schema(description = "是否展示关注列表 0不展示 1展示")
     private Integer showFollowing;
+
+    @Schema(description = "与当前用户的关系")
+    private Integer relation;
 
 }

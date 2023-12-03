@@ -16,6 +16,9 @@ public class MessageConstant {
     public static final String LIKES_NOT_VISIBLE = "喜欢列表不可见";
     public static final String STARS_NOT_VISIBLE = "收藏列表不可见";
     public static final String FOLLOWING_NOT_VISIBLE = "关注列表不可见";
-    public static final String FOLLOWED_NOT_VISIBLE = "粉丝列表不可见";
+    public static final String FOLLOWER_NOT_VISIBLE = "粉丝列表不可见";
+    public static final String FRIEND_NOT_VISIBLE = "朋友列表不可见";
+    public static final String FOLLOW_MYSELF = "你不能关注自己";
+    public static final String UNFOLLOW_MYSELF = "你不能取关自己";
 
 }

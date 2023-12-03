@@ -4,13 +4,16 @@ package com.yubar.kedou.controller.user;
  * Date:2023/11/24-15:22
  */
 
+import cn.hutool.core.bean.BeanUtil;
 import com.yubar.kedou.constant.JwtClaimsConstant;
+import com.yubar.kedou.context.BaseContext;
 import com.yubar.kedou.domain.dto.UserLoginDTO;
 import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.domain.vo.UserLoginVO;
 import com.yubar.kedou.domain.vo.UserSignVO;
 import com.yubar.kedou.domain.vo.UserVO;
+import com.yubar.kedou.service.RelationService;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.properties.JwtProperties;
 import com.yubar.kedou.result.Result;
@@ -41,6 +44,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private JwtProperties jwtProperties;
+    @Autowired
+    private RelationService relationService;
 
 
     @Operation(description = "用户登录")
@@ -94,7 +99,10 @@ public class UserController {
     public Result<UserVO> getUserInfo(@PathVariable("userId") Long userId) {
         log.info("用户查询：{}", userId);
         UserVO uservo = userService.getInfoById(userId);
-
+        // 如果不是当前登陆用户，还需要查询这个用户和当前用户的关系
+        if(BaseContext.getCurrentId() != null && !uservo.getId().equals(BaseContext.getCurrentId())){
+            relationService.setRelationWithCurrentUser(uservo);
+        }
         return Result.success(uservo);
     }
 }

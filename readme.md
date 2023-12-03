@@ -86,13 +86,13 @@ BaseUrl : "/user/list/comment"
   >
   >method: GET
 
-  - 缓存结构：
+  缓存结构：
 
-    >String ttl: -1
-    >
-    >key: comment::视频ID
-    >
-    >value: 评论列表
+  >String ttl: -1
+  >
+  >key: comment::视频ID
+  >
+  >value: 评论列表
 
 - [x] 提交评论：传入视频ID和评论内容
 
@@ -151,7 +151,7 @@ BaseUrl : "/user/user"
 
 BaseUrl : "/user/relation"
 
-- [ ] 查看关注列表：传入用户ID，返回关注列表
+- [x] 查看关注列表：传入用户ID，返回关注列表
 
   ==需要校验是否为本人 or 关注列表是否公开== 
 
@@ -159,7 +159,15 @@ BaseUrl : "/user/relation"
   >
   >method: GET
 
-- [ ] 查看粉丝列表：传入用户ID，返回粉丝列表
+  缓存结构：
+
+  >Set ttl: -1
+  >
+  >key: following::用户ID
+  >
+  >value: 用户关注集合
+
+- [x] 查看粉丝列表：传入用户ID，返回粉丝列表
 
   ==需要校验是否为本人 or 粉丝列表是否公开== 
 
@@ -167,21 +175,29 @@ BaseUrl : "/user/relation"
   >
   >method: GET
 
-- [ ] 查看朋友列表：传入用户ID，返回朋友列表
+  缓存结构：
 
-  ==需要校验是否为本人== 
+  >Set ttl: -1
+  >
+  >key: follower::用户ID
+  >
+  >value: 用户粉丝集合
+
+- [x] 查看朋友列表：返回朋友列表
+
+  ==只能本人查看==  无需缓存，只需要求关注和粉丝的交集就可得到结果
 
   >path: '/friend/{userId}'
   >
   >method: GET
 
-- [ ] 添加关注：传入关注用户ID
+- [x] 添加关注：传入关注用户ID
 
   >path: '/follow/{userId}'
   >
   >method: POST
 
-- [ ] 取消关注：传入取消关注用户ID
+- [x] 取消关注：传入取消关注用户ID
 
   >path: '/follow/{userId}'
   >
@@ -225,7 +241,7 @@ BaseUrl : "/user/likes"
 
 BaseUrl : "/user/star"
 
-- [ ] 查看收藏列表：传入用户ID，返回收藏列表
+- [x] 查看收藏列表：传入用户ID，返回收藏列表
 
   ==需要校验是否为本人 or 收藏列表是否公开== 
 
@@ -235,7 +251,7 @@ BaseUrl : "/user/star"
   >
   > params: userId
 
-- [ ] 添加收藏：传入视频ID
+- [x] 添加收藏：传入视频ID
 
   ==需要更新视频表中的收藏数量== 
 
@@ -245,7 +261,7 @@ BaseUrl : "/user/star"
   >
   > Params: videoId
 
-- [ ] 移除收藏：传入视频ID
+- [x] 移除收藏：传入视频ID
 
   ==需要更新视频表中的收藏数量== 
 
@@ -333,3 +349,5 @@ export default {
 
 
 ### 6.2 后端篇
+
+

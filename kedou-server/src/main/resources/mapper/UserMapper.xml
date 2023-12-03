@@ -26,7 +26,7 @@
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
             <result property="showLikes" column="show_likes" jdbcType="INTEGER"/>
             <result property="showStars" column="show_stars" jdbcType="INTEGER"/>
-            <result property="showFollowed" column="show_followed" jdbcType="INTEGER"/>
+            <result property="showFollower" column="show_follower" jdbcType="INTEGER"/>
             <result property="showFollowing" column="show_following" jdbcType="INTEGER"/>
     </resultMap>
 
@@ -38,6 +38,6 @@
         sex,birthday,school,
         status,is_delete,create_time,
         update_time,show_likes,show_stars,
-        show_followed,show_following
+        show_follower,show_following
     </sql>
 </mapper>

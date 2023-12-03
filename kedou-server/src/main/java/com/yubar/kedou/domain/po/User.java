@@ -125,7 +125,7 @@ public class User implements Serializable {
     /**
      * 是否展示粉丝列表 0不展示 1展示
      */
-    private Integer showFollowed;
+    private Integer showFollower;
 
     /**
      * 是否展示关注列表 0不展示 1展示

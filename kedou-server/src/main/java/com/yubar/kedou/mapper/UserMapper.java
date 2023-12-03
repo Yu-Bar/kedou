@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Options;
 /**
 * @author 兰豹基
 * @description 针对表【user】的数据库操作Mapper
-* @createDate 2023-12-01 00:59:31
+* @createDate 2023-12-02 00:27:13
 * @Entity com.yubar.kedou.domain.po.User
 */
 public interface UserMapper extends BaseMapper<User> {
