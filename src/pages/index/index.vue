@@ -2,22 +2,22 @@
 
     <view class="content">
       <!--      <CustomNavbar />-->
-      <KedouSwiper class="kedou-swiper-component" ref="tab0" v-show="activeIndex === 0 && !reloadingVideo"/>
-      <friend ref="tab1" v-show="activeIndex === 1"/>
-      <message ref="tab3" v-show="activeIndex === 3"/>
-      <my ref="tab4" v-show="activeIndex === 4"/>
+      <KedouSwiper class="kedou-swiper-component" ref="tab0" v-show="activeIndex == 0 && !reloadingVideo"/>
+      <friend ref="tab1" v-show="activeIndex == 1"/>
+      <message ref="tab3" v-show="activeIndex == 3"/>
+      <my ref="tab4" v-show="activeIndex == 4"/>
     </view>
 
 
     <!--        <KedouTabbar ref="kedouTabbarRef" :activeIndex="0" class="custom-tab-bar"></KedouTabbar>-->
   <view class="tab-bar">
     <view v-for="(tab, index) in tabs" :key="index" @click="switchTab(index)" class="tar-bar-text">
-      <image v-if="index === 2" :src="tab.iconPath" class="center-icon"/>
-      <image v-else-if="index === 0 && !isTextVisible" :src="tab.iconPath" class="reload-icon"/>
-      <text v-else :class="{'active': activeIndex === index}">
-          {{ index !== 0 || isTextVisible ? tab.text : ''}}
+      <image v-if="index == 2" :src="tab.iconPath" class="center-icon"/>
+      <image v-else-if="index == 0 && !isTextVisible" :src="tab.iconPath" class="reload-icon"/>
+      <text v-else :class="{'active': activeIndex == index}">
+          {{ index != 0 || isTextVisible ? tab.text : ''}}
       </text>
-      <view v-if="index === 3 && showBadge" class="badge">{{ unreadCount }}</view>
+      <view v-if="index == 3 && showBadge" class="badge">{{ unreadCount }}</view>
     </view>
   </view>
 
@@ -98,9 +98,9 @@ export default {
   methods: {
     switchTab(index) {
       console.log('switchTab' + this.activeIndex);
-      if (index === this.activeIndex) {
+      if (index == this.activeIndex) {
         console.log('switchTab重复点击', this.activeIndex);
-        if (index === 0) {
+        if (index == 0) {
           // 如果当前点击的是已经首页，则执行刷新操作
           console.log('执行刷新操作')
           this.$refs.tab0.stopPlay()
@@ -114,7 +114,7 @@ export default {
         this.unreadCount = 0; // 未读消息数归零
       } else {
         // 根据 tarbar 索引来判断点击了哪个页面
-        if (index === 2) {
+        if (index == 2) {
           if(this.memberStore.profile != null){
             uni.navigateTo({
               url: '/pages/publish/publish' // 跳转到 publish 页面
@@ -129,7 +129,7 @@ export default {
           console.log('index',index)
           console.log('activeIndex',this.activeIndex)
           // 回到主页时继续播放视频 切出主页时停止播放视频
-          if(index === 0){
+          if(index == 0){
             this.$refs.tab0.continuePlay()
           }else {
             this.$refs.tab0.stopPlay()
@@ -174,7 +174,7 @@ page {
   right: 0;
   bottom: 0;
   width: 100%;
-  height: 60px;
+  height: 8vh;
   background-color: #000000;
   display: flex;
   justify-content: space-around; /* 在容器内平均分配元素 */

@@ -74,6 +74,16 @@
 			"path" : "pages/userspace/userspace",
 			"style" : 
 			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/relation/relation",
+			"style" : 
+			{
+				"navigationStyle": "custom",
 				"navigationBarTitleText" : "",
 				"enablePullDownRefresh" : false
 			}
@@ -84,33 +94,5 @@
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#272b1e",
 		"backgroundColor": "#F8F8F8"
-	},
-//	"tabBar": {
-//		"textFontSize": 20,
-//		"color": "#bfbccb",
-//		"backgroundColor": "#000000",
-//		"selectedColor": "#c9eaff",
-//		"list": [{
-//				"pagePath": "pages/index/index",
-//				"text": "首页"
-//			},
-//			{
-//				"pagePath": "pages/friend/friend",
-//				"text": "朋友"
-//			},
-//			{
-//				"pagePath": "pages/publish/publish",
-//				"iconPath": "static/add.png",
-//				"selectedIconPath": "static/add.png"
-//			},
-//			{
-//				"pagePath": "pages/message/message",
-//				"text": "消息"
-//			},
-//			{
-//				"pagePath": "pages/my/my",
-//				"text": "我"
-//			}
-//		]
-//	}
+	}
 }

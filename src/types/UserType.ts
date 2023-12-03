@@ -38,6 +38,22 @@ export type UserType = {
     updateTime : Date
     showLikes : number
     showStars : number
-    showFollowed : number
+    showFollower : number
     showFollowing : number
+    relation: number
 }
+
+/** 关系列表的用户信息 */
+export type ProfileType = {
+    /** 用户ID */
+    id: number
+    /** 昵称 */
+    nickname: string
+    /** 头像 */
+    profile: string
+    /** 简介 */
+    bio: string
+    /** 和当前用户是否为朋友关系 */
+    relation: number
+}
+

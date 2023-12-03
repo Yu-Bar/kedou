@@ -6,11 +6,11 @@
                 :thumbnail="userInfo.profile">
         <text class="number" @click="showLikes(userInfo.id)">{{ userInfo.likes }}</text>
         获赞 |
-        <text class="number" @click="showFriends(userInfo.friends)">{{ userInfo.friends }}</text>
+        <text class="number" @click="showFriends(userInfo.id)">{{ userInfo.friends }}</text>
         朋友 |
-        <text class="number" @click="showFollowing(userInfo.following)">{{ userInfo.following }}</text>
+        <text class="number" @click="showFollowing(userInfo.id)">{{ userInfo.following }}</text>
         关注 |
-        <text class="number" @click="showFollower(userInfo.follower)">{{ userInfo.follower }}</text>
+        <text class="number" @click="showFollower(userInfo.id)">{{ userInfo.follower }}</text>
         粉丝 |
         <view style="display: inline-block;float: right">
           <button class="button" @click="logout">
@@ -112,6 +112,7 @@ import {useMemberStore} from '@/stores'
 import {getUserInfoById} from "@/service/UserApi";
 import {getLikeVideoList, likeVideo} from "@/service/LikesApi";
 import {getStarVideoList} from "@/service/StarsApi";
+import {getFollowerSetById, getFollowingSetById, getFriendSetById} from "@/service/RelationApi";
 
 export default {
   data() {
@@ -123,6 +124,7 @@ export default {
       videoContainerHeight: 'calc(100vh - 260rpx)',
       likeVideoList: [],
       starVideoList: [],
+      user: null,
     }
   },
   computed: {
@@ -226,28 +228,50 @@ export default {
       });
     },
 
-    //   TODO: 展示相关信息(需要再写一个页面，进行跳转）
-    showFriends(id) {
-
-    },
-    showFollowing(id) {
-
-    },
-    showFollower(id) {
-
-    },
-
-    //   TODO: 关注和取关
-    follow(id) {
-
-    },
-    unfollow(id) {
-
+    //  展示相关信息(需要再写一个页面，进行跳转）
+    async showFriends(id) {
+      const res = await getFriendSetById(id)
+      if(res.code == 1){
+        // 跳转至朋友列表
+        await uni.navigateTo({
+          url: `/pages/relation/relation?profileSet=${encodeURIComponent(JSON.stringify(res.data))}&active=0&user=${this.userInfo.id}`
+        });
+      }else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
     },
 
-    // TODO: 私信(需要先写一个聊天页面，进行跳转）
-    message(id) {
+    async showFollowing(id) {
+      const res = await getFollowingSetById(id)
+      if(res.code == 1){
+        // 跳转至朋友列表
+        await uni.navigateTo({
+          url: `/pages/relation/relation?profileSet=${encodeURIComponent(JSON.stringify(res.data))}&active=1&user=${this.userInfo.id}`
+        });
+      }else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
 
+    async showFollower(id) {
+      const res = await getFollowerSetById(id)
+      if(res.code == 1){
+        // 跳转至朋友列表
+        await uni.navigateTo({
+          url: `/pages/relation/relation?profileSet=${encodeURIComponent(JSON.stringify(res.data))}&active=2&user=${this.userInfo.id}`
+        });
+      }else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
     },
 
     // 对应的底部 tab 被选中时执行
@@ -276,22 +300,6 @@ export default {
         this.getStarList()
     }
   },
-  // onShow() {
-  //   console.log('进来了哦')
-  //   // 在页面加载时进行条件判断
-  //   if (this.memberStore.profile == null) {
-  //     uni.redirectTo({
-  //       url: '/pages/my/login/login' // 跳转到登陆页面
-  //     });
-  //   }else{
-  //     this.userInfo = this.getUser()
-  //   }
-  // },
-  // onLoad() {
-  //   console.log('监听onReloadMyInfo')
-  //   // 监听自定义事件 onBackPress
-  //   uni.$on('onReloadMyInfo', this.reloadInfo);
-  // },
   onUnload() {
     console.log('取消监听onReloadMyInfo')
     // 取消监听自定义事件 onBackPress

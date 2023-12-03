@@ -1,82 +1,208 @@
 <template>
   <KedouBlankNavbar/>
-  <view v-if="userInfo">
-    <uni-card :title="userInfo.nickname" :isFull="true" :sub-title="userInfo.username" :extra="userInfo.bio"
-              :thumbnail="userInfo.profile">
-      <text class="number" @click="showLikes(userInfo.id)">{{ userInfo.likes }}</text>
-      获赞 |
-      <text class="number" @click="showFriends(userInfo.friends)">{{ userInfo.friends }}</text>
-      朋友 |
-      <text class="number" @click="showFollowing(userInfo.following)">{{ userInfo.following }}</text>
-      关注 |
-      <text class="number" @click="showFollower(userInfo.follower)">{{ userInfo.follower }}</text>
-      粉丝 |
-      <view v-if="true/*checkFollow(userInfo.id)*/" style="display: inline-block;float: right">
-        <button class="button" @click="follow(userInfo.id)">
-          <image class="icon_img" src="@/static/follow.png"></image>
-          关注
-        </button>
-      </view>
-      <view v-else style="display: inline-block;float: right">
-        <button class="button" @click="unfollow(userInfo.id)">
-          <image class="icon_img" src="@/static/unfollow.png"></image>
-          已关注
-        </button>
-      </view>
-    </uni-card>
+  <!-- 返回按钮 -->
+  <image src="/static/dark_goback.png" @click="goBack" class="goback-icon">后退</image>
 
-    <uni-card :isFull="true">
-      <image class="icon_img" src="@/static/address.png"></image>
-      {{ userInfo.address }} |
-      <image class="icon_img" src="@/static/school.png"></image>
-      {{ userInfo.school }} |
-      <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
-      <image v-else class="icon_img" src="@/static/female.png"></image>
-      |
-      <button class="button" style="float: right" @click="message(userInfo.id)">
-        <image class="icon_img" src="@/static/message.png"></image>
-        私信
-      </button>
-    </uni-card>
+  <view class="my-style">
+    <view v-if="userInfo">
+      <uni-card :title="userInfo.nickname" :isFull="true" :sub-title="userInfo.username" :extra="userInfo.bio"
+                :thumbnail="userInfo.profile">
+        <text class="number" @click="showLikes(userInfo.id)">{{ userInfo.likes }}</text>
+        获赞 |
+        <text class="number" @click="showFollowing(userInfo.id)">{{ userInfo.following }}</text>
+        关注 |
+        <text class="number" @click="showFollower(userInfo.id)">{{ userInfo.follower }}</text>
+        粉丝 |
+        <view v-if="userInfo.id != memberStore.profile?.id" style="display: inline-block;float: right">
+          <button v-if="userInfo.relation == 0" class="button" type="warn" @click="follow(userInfo.id)">
+            关注
+          </button>
+          <button v-else-if="userInfo.relation == 1" class="button" type="default" @click="unfollow(userInfo.id)">
+            已关注
+          </button>
+          <button v-else-if="userInfo.relation == 2" class="button" type="warn" @click="follow(userInfo.id)">
+            回关
+          </button>
+          <button v-else class="button" type="default" @click="unfollow(userInfo.id)">
+            互相关注
+          </button>
+        </view>
+      </uni-card>
 
-    <view class="video-container">
-      <view v-for="(video, index) in userInfo.videoList" :key="index" class="video-item">
-        <view class="video-cover-container">
-          <!-- 显示视频封面 -->
-          <image :src="video.cover" @click="playVideo(index)" class="video-cover"></image>
-          <!-- 显示点赞量 -->
-          <view class="like-count">
-            <image class="icon_img" src="@/static/likes.png"></image>
-            <text>{{ video.likes }}</text>
+      <uni-card :isFull="true">
+        <view class="info-container">
+          <view v-if="userInfo.address != null && userInfo.address != ''" class="info-item">
+            <image class="icon_img" src="@/static/address.png"></image>
+            {{ userInfo.address }} |
           </view>
+          <view v-if="userInfo.school != null && userInfo.school != ''" class="info-item">
+            <image class="icon_img" src="@/static/school.png"></image>
+            {{ userInfo.school }} |
+          </view>
+          <view v-if="userInfo.sex != null && userInfo.sex != ''" class="info-item">
+            <image v-if="userInfo.sex===1" class="icon_img" src="@/static/male.png"></image>
+            <image v-else class="icon_img" src="@/static/female.png"></image>
+            |
+          </view>
+          <button v-if="userInfo.id != memberStore.profile?.id" class="button" @click="message(userInfo.id)">
+            <image class="icon_img" src="@/static/message.png"></image>
+            私信
+          </button>
+        </view>
+      </uni-card>
+
+
+      <view class="nav-bar">
+        <view v-for="(title, index) in navTitles"
+              :key="index"
+              class="nav-item"
+              :class="{ 'active': currentTab === title }"
+              @click="switchContent(title)">
+          {{ title }}
         </view>
       </view>
+
+      <scroll-view class="nav-content" scroll-y="true" v-show="currentTab === '作品'">
+        <view class="video-container">
+          <view v-for="(video, index) in userInfo.videoList" :key="index" class="video-item">
+            <view class="video-cover-container">
+              <!-- 显示视频封面 -->
+              <image :src="video.cover" @click="playVideo(index)" class="video-cover"></image>
+              <!-- 显示点赞量 -->
+              <view class="like-count">
+                <image class="icon_img" src="@/static/likes.png"></image>
+                <text>{{ formatNumber(video.likes) }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <scroll-view class="nav-content" scroll-y="true" v-show="currentTab === '喜欢'">
+        <view class="video-container">
+          <view v-for="(video, index) in likeVideoList" :key="index" class="video-item">
+            <view class="video-cover-container">
+              <!-- 显示视频封面 -->
+              <image :src="video.cover" @click="playLikeVideo(index)" class="video-cover"></image>
+              <!-- 显示点赞量 -->
+              <view class="like-count">
+                <image class="icon_img" src="@/static/likes.png"></image>
+                <text>{{ formatNumber(video.likes) }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <scroll-view class="nav-content" scroll-y="true" v-show="currentTab === '收藏'">
+        <view class="video-container">
+          <view v-for="(video, index) in starVideoList" :key="index" class="video-item">
+            <view class="video-cover-container">
+              <!-- 显示视频封面 -->
+              <image :src="video.cover" @click="playStarVideo(index)" class="video-cover"></image>
+              <!-- 显示点赞量 -->
+              <view class="like-count">
+                <image class="icon_img" src="@/static/likes.png"></image>
+                <text>{{ formatNumber(video.likes) }}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
     </view>
 
   </view>
+  <!--  <KedouTabbar :activeIndex="4" class="custom-tab-bar"></KedouTabbar>-->
 </template>
 
 <script>
 import {useMemberStore} from '@/stores'
 import {getUserInfoById} from "@/service/UserApi";
+import {getLikeVideoList, likeVideo} from "@/service/LikesApi";
+import {getStarVideoList} from "@/service/StarsApi";
+import {
+  followUserById,
+  getFollowerSetById,
+  getFollowingSetById,
+  getFriendSetById,
+  unfollowUserById
+} from "@/service/RelationApi";
 
 export default {
   data() {
     return {
       memberStore: useMemberStore(),
+      userId: null,
       userInfo: null,// 用于存放获取到的用户数据
+      currentTab: '作品',
+      navTitles: ['作品', '私密', '收藏', '喜欢'],
+      videoContainerHeight: 'calc(100vh - 260rpx)',
+      likeVideoList: [],
+      starVideoList: [],
     }
   },
+  computed: {
+    formatNumber() {
+      return (value) => {
+        if (value > 9999) {
+          let formattedNumber = (value / 10000).toFixed(1); // 将数字格式化为指定位数的小数
+          if (formattedNumber.endsWith('.0')) {
+            formattedNumber = formattedNumber.slice(0, -2); // 去掉小数末尾的'.0'
+          }
+          return `${formattedNumber}万`
+        } else {
+          // console.log('format3')
+          return value.toString();
+        }
+      };
+    },
+  },
   methods: {
+    goBack() {
+      // 返回上一个页面
+      uni.navigateBack();
+    },
     // 异步请求获取用户信息
     async getUser() {
-      const memberStore = useMemberStore()
-      const res = await getUserInfoById(memberStore.profile?.id)
+      const res = await getUserInfoById(this.userId)
       console.log('请求成功：', res.data)
       this.userInfo = res.data
       console.log('请求成功：userinfo', this.userInfo)
     },
-
+    async getLikesList() {
+      const res = await getLikeVideoList(this.userInfo.id)
+      if(res.code == 1)
+        this.likeVideoList = res.data
+      else {
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
+    async getStarList() {
+      const res = await getStarVideoList(this.userInfo.id)
+      if(res.code == 1)
+        this.starVideoList = res.data
+      else {
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
+    switchContent(title) {
+      this.currentTab = title;
+      // 查看喜欢列表
+      if(title === '喜欢'){
+        this.getLikesList()
+      }
+      // 查看收藏列表
+      if(title === '收藏'){
+        this.getStarList()
+      }
+    },
     showLikes() {
       uni.showModal({
         confirmText: '确定',
@@ -84,66 +210,150 @@ export default {
         showCancel: false,
       })
     },
-    // TODO： 退出登陆
-    logout(videoId){
-
+    // 退出登陆
+    logout() {
+      console.log('退出按钮被点击');
+      this.memberStore.clearProfile();
+      console.log('用户数据已清除');
+      uni.navigateTo({
+        url: '/pages/my/login/login' // 跳转到其他页面
+      });
     },
-
     // TODO： 设置用户信息
-    setInfo(videoId){
-
+    setInfo() {
+      console.log('设置')
     },
 
-    // TODO: 播放视频
     // 根据视频 ID 进行播放操作
     playVideo(videoNum) {
-      console.log('播放视频', videoNum)
       // 跳转至视频播放页面
       uni.navigateTo({
         url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.userInfo.videoList))}&videoNum=${videoNum}`
       });
     },
 
-    //   TODO: 展示相关信息(需要再写一个页面，进行跳转）
-    showFriends(id) {
-
-    },
-    showFollowing(id) {
-
-    },
-    showFollower(id) {
-
+    playLikeVideo(videoNum) {
+      // 跳转至视频播放页面
+      uni.navigateTo({
+        url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.likeVideoList))}&videoNum=${videoNum}`
+      });
     },
 
+    playStarVideo(videoNum) {
+      // 跳转至视频播放页面
+      uni.navigateTo({
+        url: `/components/KedouSwiper?videoList=${encodeURIComponent(JSON.stringify(this.starVideoList))}&videoNum=${videoNum}`
+      });
+    },
+
+    //  展示相关信息(需要再写一个页面，进行跳转）
+    async showFollowing(id) {
+      const res = await getFollowingSetById(id)
+      if(res.code == 1){
+        // 跳转至朋友列表
+        await uni.navigateTo({
+          url: `/pages/relation/relation?profileSet=${encodeURIComponent(JSON.stringify(res.data))}&active=1&user=${this.userInfo.id}`
+        });
+      }else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
+
+    async showFollower(id) {
+      const res = await getFollowerSetById(id)
+      if(res.code == 1){
+        // 跳转至朋友列表
+        await uni.navigateTo({
+          url: `/pages/relation/relation?profileSet=${encodeURIComponent(JSON.stringify(res.data))}&active=2&user=${this.userInfo.id}`
+        });
+      }else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'none'
+        })
+      }
+    },
     //   TODO: 关注和取关
-    follow(id) {
+    async follow(id) {
+      const res = await followUserById(id)
+      if(res.code == 1){
+        this.userInfo.relation++
+      }
+      else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'error'
+        })
+      }
 
     },
-    unfollow(id) {
-
+    async unfollow(id) {
+      const res = await unfollowUserById(id)
+      if(res.code == 1){
+        this.userInfo.relation--
+      }
+      else{
+        await uni.showToast({
+          title: res.msg,
+          icon: 'error'
+        })
+      }
     },
 
     // TODO: 私信(需要先写一个聊天页面，进行跳转）
     message(id) {
 
-    }
+    },
 
+    // 返回页面时重新加载信息
+    reloadInfo() {
+      console.log('重新加载用户信息')
+      if(this.currentTab == '喜欢')
+        this.getLikesList()
+      if(this.currentTab == '收藏')
+        this.getStarList()
+    }
   },
-  onShow() {
-    console.log('进来了哦')
-    // 在页面加载时进行条件判断
-    // if (this.memberStore.profile == null) {
-    //   uni.redirectTo({
-    //     url: '/pages/my/login/login' // 跳转到登陆页面
-    //   });
-    // }
-    this.userInfo = this.getUser()
+  // 通过点击头像加载
+  onLoad(options) {
+    if(options.user){
+      this.userId = options.user
+      console.log('user',this.user)
+      this.getUser()
+      console.log('监听onReloadMyInfo')
+      // 监听自定义事件 onBackPress
+      uni.$on('onReloadUserInfo', this.reloadInfo);
+    }
+  },
+  onUnload() {
+    console.log('取消监听onReloadMyInfo')
+    // 取消监听自定义事件 onBackPress
+    uni.$off('onReloadUserInfo', this.reloadInfo);
   },
 }
 
 </script>
 
 <style>
+
+.goback-icon {
+  position: fixed;
+  top: 30rpx; /* 距离顶部的距离 */
+  left: 10rpx; /* 距离左侧的距离 */
+  width: 28px; /* 图片宽度 */
+  height: 28px; /* 图片高度 */
+  z-index: 9999; /* 图片层级 */
+  opacity: 80%;
+}
+
+.my-style {
+  background: white;
+  height: calc(100vh - 100rpx); /* Adjust height to accommodate the navbar */
+}
+
 .icon_img {
   width: 28rpx;
   height: 28rpx;
@@ -160,27 +370,30 @@ export default {
   height: 40rpx;
   display: inline-block;
   vertical-align: middle; /* 设置垂直对齐方式为中间对齐 */
+  float: right;
 }
 
 /* 使用 flex 布局实现每行三个视频封面 */
 .video-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+//justify-content: space-between; justify-content: flex-start;
   /* 可以添加其他样式，如边距等 */
 }
 
 .video-item {
-  width: calc(33.33% - 10px); /* 每行显示三个视频，考虑边距，这里设置为占据三分之一的宽度 */
-  margin-bottom: 10px; /* 设置视频项之间的下边距 */
+  width: calc(33.33% - 10rpx); /* 每行显示三个视频，考虑边距，这里设置为占据三分之一的宽度 */
+  /* margin-bottom: 1rpx;  设置视频项之间的下边距 */
   /* 可以添加其他样式，如边框、内边距等 */
 }
+
 
 /* TODO: 配合后端限制视频封面宽高比，让图片正常显示 */
 .video-cover {
   width: 100%; /* 视频封面图片宽度填充 */
   height: 360rpx; /* 高度自适应 */
   /* 可以添加其他样式，如圆角等 */
+  margin-left: 15rpx;
 }
 
 .video-cover-container {
@@ -192,12 +405,50 @@ export default {
 
 .like-count {
   position: absolute; /* 设置绝对定位 */
-  bottom: 5px; /* 距离底部 5px */
-  left: 5px; /* 距离左侧 5px */
+  bottom: 10rpx; /* 距离底部 5px */
+  left: 10rpx; /* 距离左侧 5px */
   color: rgba(255, 255, 255, 0.75); /* 文字颜色 */
-  padding: 5px; /* 内边距 */
+  padding: 10rpx; /* 内边距 */
   font-size: 23rpx; /* 文字大小 */
   display: flex; /* 使用 flex 布局 */
+}
+
+.info-container {
+  display: flex;
+  flex-wrap: nowrap; /* 防止换行 */
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+}
+
+
+/* 导航栏相关样式 */
+.nav-bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 5rpx 0;
+}
+
+.nav-item {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s;
+  transition: color 0.3s;
+  color: #767676;
+}
+
+.nav-item.active {
+  border-color: #16151a;
+  color: #1a1a1c;
+}
+
+.nav-content {
+  max-height: 63vh; /* Adjust the maximum height for scroll view */
 }
 
 </style>

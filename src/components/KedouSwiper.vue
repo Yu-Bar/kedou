@@ -102,6 +102,7 @@ import {getVideoLists} from "@/service/VideoApi";
 import {commitComment, getCommentListByVideoId} from "@/service/CommentApi";
 import {dislikeVideo, likeVideo} from "@/service/LikesApi";
 import {disStarVideo, starVideo} from "@/service/StarsApi";
+import {useMemberStore} from "@/stores";
 
 // let authorId;
 export default {
@@ -126,6 +127,7 @@ export default {
       isCommentVisible: false,  // 是否显示评论列表
       commentContent: '',
       autoPlay: true,
+      memberStore: useMemberStore(),
       // TODO 已有的评论列表数据
       commentList: [
         {
@@ -274,6 +276,7 @@ export default {
         success: () => {
           console.log('事件emit')
           uni.$emit('onReloadMyInfo'); // 触发自定义事件 onReloadInfo，刷新用户信息
+          uni.$emit('onReloadUserInfo');
         }
       });
     },
@@ -354,9 +357,12 @@ export default {
       this.setVideoStyle()
     },
 
-    // TODO 进入用户主页
+    // 进入用户主页
     getIntoUserSpace(userId) {
       console.log('进入用户主页', userId)
+      uni.navigateTo({
+        url: `/pages/userspace/userspace?user=${userId}`
+      })
     },
 
     async comments(id) {
@@ -550,12 +556,11 @@ view {
 
 .goback-icon {
   position: fixed;
-  top: 70rpx; /* 距离顶部的距离 */
+  top: 100rpx; /* 距离顶部的距离 */
   left: 10rpx; /* 距离左侧的距离 */
   width: 28px; /* 图片宽度 */
   height: 28px; /* 图片高度 */
   z-index: 9999; /* 图片层级 */
-  opacity: 80%;
   background: none;
 }
 

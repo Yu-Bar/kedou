@@ -81,7 +81,7 @@ export default {
           icon: 'none',
           title: `欢迎来到科抖，${res.data.nickname}`
         })
-        uni.navigateBack({
+        await uni.navigateBack({
           delta: 2, // 关闭当前页面，如果是关闭上两个页面可以传入2
           success: function () {
             // 关闭成功的回调
