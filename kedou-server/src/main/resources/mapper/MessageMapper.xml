@@ -6,15 +6,15 @@
 
     <resultMap id="BaseResultMap" type="com.yubar.kedou.domain.po.Message">
             <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="session" column="session" jdbcType="BIGINT"/>
             <result property="createUser" column="create_user" jdbcType="BIGINT"/>
-            <result property="receiver" column="receiver" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="videoId" column="video_id" jdbcType="BIGINT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,create_user,receiver,
+        id,session,create_user,
         content,video_id,create_time
     </sql>
 </mapper>

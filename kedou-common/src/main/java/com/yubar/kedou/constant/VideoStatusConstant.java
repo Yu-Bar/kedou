@@ -24,7 +24,7 @@ public class VideoStatusConstant {
     /**
      * 视频删除状态 0未删除 1删除
      */
-    public static final Integer UN_DELETE = 1;
+    public static final Integer UN_DELETE = 0;
     public static final Integer DELETE = 1;
 
     /**

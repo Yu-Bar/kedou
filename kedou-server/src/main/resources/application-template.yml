@@ -1,0 +1,31 @@
+kedou:
+  port: 后端服务器端口
+  datasource:
+    host:  数据库服务器地址
+    port:  数据库服务器端口
+    database:  数据库名
+    username:  数据库用户名
+    password:  数据库密码
+  alioss: # 阿里云相关配置，请参考阿里云oss官方手册
+    endpoint:  端点
+    access-key-id:  秘钥ID
+    access-key-secret:  秘钥
+    bucket-name:  bucket名
+  redis:
+    host:  redis 服务器地址
+    port:  redis 服务器端口
+    password:  redis 密码
+    database:  redis 数据库序号
+  wechat: # 小程序相关配置，请参考小程序s官方手册
+    appid:  小程序 appid
+    secret:  小程序秘钥
+  upload:
+    mode:  文件上传模式，如果是 CLOUD，则是使用上面的阿里云进行文件上传；如果是 LOCAL 则表示上传至本地，本地调试无法使用 LOCAL ，除非将本地主机进行内网穿透
+    base-path:  上传文件位置的基地址（仅 LOCAL 模式有效）
+    return-base-path:  返回给前端的上传成功的文件路径的基地址（仅 LOCAL 模式有效）
+  rabbitmq:
+    host:  RabbitMQ 服务器地址
+    port:  RabbitMQ 服务器端口
+    virtual-host:  RabbitMQ 虚拟服务器
+    username:   RabbitMQ 用户名
+    password:   RabbitMQ 密码

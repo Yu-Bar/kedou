@@ -6,21 +6,86 @@
 
 ## 1 介绍
 
-"科抖"是一款短视频平台应用，USTC自己的抖音！
+"科抖"是一款前后端分离的短视频平台应用，USTC自己的抖音！
+
+实现功能：
+
+- 刷视频
+- 发布视频
+- 视频点赞、收藏、评论
+- 个人空间
+- 关注和粉丝功能
+- 私信功能
+
+  <div class="image-container" style="display: flex;justify-content: space-around;align-items: center;">
+    <img src=".\doc\img\项目演示1.gif" alt="项目演示1" style="zoom:35%;" >
+    <img src=".\doc\img\项目演示2.gif" alt="项目演示2" style="zoom:35%;" >
+    <img src=".\doc\img\项目演示3.gif" alt="项目演示3" style="zoom:35%;" >
+    <img src=".\doc\img\项目演示4.gif" alt="项目演示3" style="zoom:35%;" >
+  </div>
+
+
+
 
 ### 1.1 技术选型
 
-- 前端：uni-app + vue3 + uni-ui
 - 后端：JDK17 + SpringBoot3 \+ MySql + Redis + RabbitMQ + 阿里云OSS
+- 前端：uni-app + vue3 + uni-ui + nodejs + Pinia
 
 
 
 ## 2 使用说明
 
-- 前端：
 - 后端：
 
+  1. 将 `doc/kedou.sql` 中的sql文件导入
 
+  2. 配置参数：配置好 `src/main/resources/application-template.yml` 文件中的所有参数，并修改`src/main/resources/application-template.yml`  中的
+
+     ```yaml
+     spring:
+       profiles:
+         active: dev # 这里是你的配置文件后缀，你可以把application-template.yml修改为application-dev.yml
+     ```
+
+     
+
+- 前端：
+
+  环境：nodejs: v20.9.0  pnpm:8.10.5
+
+  1. 项目使用pnpm进行包管理，执行下面的命令下载所需依赖
+
+     ```bash
+     pnpm install
+     ```
+
+  2. 修改 `src/utils/http.ts` 文件中的请求基地址为你的后端服务器地址
+
+     ```
+     // 请求基地址
+     const baseURL = 'http://localhost:8077/user'
+     ```
+
+  3. 修改 `src/service/WebSocketService.ts` 文件中的 WebSocket 连接地址为你后端连接的WebSocket 端点位置
+
+     ```bash
+      this.url = `ws://localhost:8077/ws/${userId}`;
+     ```
+
+  4. 微信小程序调试：
+
+     1. 下载微信开发者工具
+
+     2. 执行命令
+
+        ```bash
+        pnpm dev:mp-weixin
+        ```
+
+     3. 执行上面命令后，会在工程路径下生成一个dist目录，打开微信小程序，导入项目，路径为：`dist/dev/mp-weixin`  ，之后就可以在微信开发者工具的模拟器中预览了
+
+     
 
 ## 3 架构设计
 
@@ -29,6 +94,12 @@
 
 
 ## 4 模块设计
+
+说明：
+
+- [ ] 待实现     
+
+- [x] 已实现
 
 ### 4.0 通用接口
 
@@ -273,9 +344,19 @@ BaseUrl : "/user/star"
 
 ### 4.7 消息模块
 
+<img src=".\doc\img\消息收发.png" alt="消息收发" style="zoom: 80%;" />
+
 BaseUrl : "/user/message"
 
-- [ ] 发送消息：传入接收用户ID和消息内容
+- [x] 获取当前用户的所有会话：用于用户的聊天记录漫游
+
+  >path: '/'
+  >
+  >method: GET
+  >
+  >Body:
+
+- [x] 发送消息：传入接收用户ID和消息内容
 
   ==新消息通知，使用消息队列存储新消息，再使用websocket，当用户在线时进行转发== 
 
@@ -285,11 +366,13 @@ BaseUrl : "/user/message"
   >
   > Body:
 
-- [ ] 获取消息：通过当前用户ID获取
+- [x] 创建会话：创建一个当前用户和指定用户之间的会话，如果会话已经存在，则返回历史会话，如果不存在就新建一个
 
-  > path: '/'
+  > path: '/session'
   >
-  > method: GET
+  > method: POST
+  >
+  > Params:userId
 
 ### 4.8 分享模块
 
@@ -309,7 +392,7 @@ BaseUrl : "/user/message"
 
 #### 6.1.1 数据格式化
 
-Q：如何实现下面这样的数据格式化？
+Q：如何实现下面这样的数据格式化？当数字大于9999时显示××万
 
 <img src=".\doc\img\数据格式化.png" alt="数据格式化" style="float: left; zoom: 67%;" />
 
@@ -348,6 +431,84 @@ export default {
 
 
 
+#### 6.1.2 用户关系处理
+
+和后端约定好这些常量
+
+```java
+public class RelationConstant {
+    // 路人
+    public static final Integer PASSERBY = 0;
+    // 关注
+    public static final Integer FOLLOWING = 1;
+    // 粉丝
+    public static final Integer FOLLOWER = 2;
+    // 朋友
+    public static final Integer FRIEND = 3;
+}
+```
+
+在处理取关操作时，将当前用户与取关用户的关系常量-1，就可以变成正确的关系状态。
+
+- 关注 -> 路人 (1 - 1 = 0) 
+- 朋友 -> 粉丝 (3 - 1 = 2) 
+- 0 状态和 2 状态只有关注操作，没有取关操作
+
+同样，在处理关注操作时，将当前用户与取关用户的关系常量+1，就可以变成正确的关系状态。
+
+
+
 ### 6.2 后端篇
 
+#### 6.2.1 WebSocket注入问题
 
+websocket里无法注入其它@Compenent 、@Service、@Resource、@Autowired、@Value等单例组件
+
+spring管理的都是单例（singleton），和 websocket （多对象）相冲突。
+websocket 不是单例，是动态生成的，因此无法注入单例组件。
+
+像 controller 里面有 service， service 里面有 dao。因为 controller，service ，dao 都有是单例，所以注入时不会报 null。但是 websocket 不是单例，所以使用spring注入一次后，后面的对象就不会再注入了，会报null。
+
+
+
+解决方法：
+
+```java
+@ServerEndpoint("/websocket")
+@Component
+public class WebSocketServer {
+
+    private static MessageService messageService;
+
+    @Autowired
+    public void setMessageService(MessageService messageService) {
+        WebSocketServer.messageService = messageService;
+    }
+}
+```
+
+
+
+#### 6.2.2 后端部署时WebSocket和Nginx的冲突
+
+NGINX 中的 `proxy_read_timeout` 是针对普通 HTTP 请求的超时设置，并不直接适用于 WebSocket 连接。对于 WebSocket 连接，NGINX 有不同的配置方式来处理超时问题。
+
+当 NGINX 用作 WebSocket 代理时，可以考虑使用 `proxy_connect_timeout`、`proxy_send_timeout` 和 `proxy_read_timeout` 等参数进行 WebSocket 的超时设置。但是需要注意的是，对于 WebSocket 连接，通常情况下并不希望设置超时时间为**永不超时**，因为这可能会导致连接资源无限期占用，最好还是设置一个合理的超时时间来避免资源浪费。
+
+在 NGINX 中配置 WebSocket 代理时，你可以像下面这样设置超时时间：
+
+```nginx
+location /websocket-route {
+    proxy_pass http://backend_server;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_connect_timeout 7d; # 设置连接超时时间为7天，表示基本不超时
+    proxy_send_timeout 7d;    # 设置发送超时时间为7天
+    proxy_read_timeout 7d;    # 设置读取超时时间为7天
+}
+```
+
+这里 `proxy_connect_timeout`、`proxy_send_timeout` 和 `proxy_read_timeout` 分别设置了连接、发送和读取的超时时间为7天，这几乎等同于永不超时。但是请注意，这种设置可能会导致资源的长时间占用，并可能不适用于所有场景。你需要根据实际情况和系统需求来调整这些超时时间。
+
+总体来说，为了避免资源浪费，最好还是根据你的应用需求设置一个合理的超时时间，使其既能确保 WebSocket 连接的稳定性，又不会长时间占用服务器资源。

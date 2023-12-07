@@ -22,6 +22,9 @@ public class UserSignVO implements Serializable {
     @Schema(description = "姓名")
     private String nickname;
 
+    @Schema(description = "头像")
+    private String profile;
+
     @Schema(description = "jwt令牌")
     private String token;
 

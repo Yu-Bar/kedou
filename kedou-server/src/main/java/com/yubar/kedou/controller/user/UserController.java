@@ -10,6 +10,7 @@ import com.yubar.kedou.context.BaseContext;
 import com.yubar.kedou.domain.dto.UserLoginDTO;
 import com.yubar.kedou.domain.dto.UserSignDTO;
 import com.yubar.kedou.domain.po.User;
+import com.yubar.kedou.domain.vo.UserChatVO;
 import com.yubar.kedou.domain.vo.UserLoginVO;
 import com.yubar.kedou.domain.vo.UserSignVO;
 import com.yubar.kedou.domain.vo.UserVO;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -65,6 +67,7 @@ public class UserController {
         UserLoginVO userLoginVO = UserLoginVO.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
+                .profile(user.getProfile())
                 .token(token)
                 .build();
 
@@ -88,6 +91,7 @@ public class UserController {
         UserSignVO userSignVO = UserSignVO.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
+                .profile(user.getProfile())
                 .token(token)
                 .build();
 
@@ -104,5 +108,14 @@ public class UserController {
             relationService.setRelationWithCurrentUser(uservo);
         }
         return Result.success(uservo);
+    }
+
+    @Operation(description = "查看聊天界面下用户的基本信息")
+    @GetMapping("/chat")
+    public Result<List<UserChatVO>> getUserInfoForChat(@RequestParam("ids") List<Long> ids) {
+        log.info("用户查询：{}", ids);
+        List<User> userList = userService.listByIds(ids);
+        List<UserChatVO> userChatVOList = BeanUtil.copyToList(userList, UserChatVO.class);
+        return Result.success(userChatVOList);
     }
 }

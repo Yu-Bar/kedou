@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Schema(description = "用户提交评论时时传递的数据模型")
+@Schema(description = "用户提交评论时传递的数据模型")
 public class CommentCommitDTO implements Serializable {
 
     @Schema(description = "视频ID")

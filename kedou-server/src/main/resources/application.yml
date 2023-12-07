@@ -21,6 +21,12 @@ spring:
       max-file-size: 10MB
       #配置单个请求大小的限制（一个请求可以上传多个文件）（SpringBoot中默认的限制是10MB）
       max-request-size: 100MB
+  rabbitmq:
+    host: ${kedou.rabbitmq.host:localhost} # 你的 mq IP
+    port: ${kedou.rabbitmq.port:5672} # 端口
+    virtual-host: ${kedou.rabbitmq.virtual-host:/} # 虚拟主机
+    username: ${kedou.rabbitmq.username:admin} # 用户名
+    password: ${kedou.rabbitmq.password:123456} # 密码
 
 #MyBatis-Plus相关配置
 mybatis-plus:
@@ -40,7 +46,7 @@ kedou:
     admin-token-name: token
     # 用户端
     user-secret-key: user
-    user-ttl: 7200000
+    user-ttl: 720000000
     user-token-name: authentication
   alioss: # 阿里云相关配置
     endpoint: ${kedou.alioss.endpoint}
@@ -81,4 +87,5 @@ knife4j:
     # 自4.1.0版本开始，替代home-custom-location属性，开发者请使用该配置
     enable-home-custom: true
     home-custom-path: classpath:MarkDown/readme.md
+
 

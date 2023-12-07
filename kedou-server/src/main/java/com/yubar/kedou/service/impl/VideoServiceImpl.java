@@ -50,7 +50,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     public List<VideoVO> getVideoListDesc() {
         // 查找视频
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Video::getIsDelete, 0)
+        wrapper.eq(Video::getIsDelete, VideoStatusConstant.UN_DELETE)
                 .orderByDesc(Video::getCreateTime);
         List<Video> videoList = list(wrapper);
         // 封装对象

@@ -20,5 +20,6 @@ public class MessageConstant {
     public static final String FRIEND_NOT_VISIBLE = "朋友列表不可见";
     public static final String FOLLOW_MYSELF = "你不能关注自己";
     public static final String UNFOLLOW_MYSELF = "你不能取关自己";
+    public static final String MESSAGE_MYSELF = "你不能给自己发消息";
 
 }

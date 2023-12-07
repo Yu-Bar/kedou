@@ -16,4 +16,14 @@
     <artifactId>kedou-server</artifactId>
     <name>Archetype - kedou-server</name>
     <url>http://maven.apache.org</url>
+
+    <build>
+        <finalName>yu-kedou</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

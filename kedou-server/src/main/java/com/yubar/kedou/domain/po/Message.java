@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+
 import lombok.Data;
 
 /**
@@ -22,14 +24,14 @@ public class Message implements Serializable {
     private Long id;
 
     /**
+     * 会话ID
+     */
+    private Long session;
+
+    /**
      * 发送人
      */
     private Long createUser;
-
-    /**
-     * 接收人
-     */
-    private Long receiver;
 
     /**
      * 消息内容
@@ -37,7 +39,7 @@ public class Message implements Serializable {
     private String content;
 
     /**
-     * 分享视频id
+     * 分享视频id 为空则是普通消息
      */
     private Long videoId;
 

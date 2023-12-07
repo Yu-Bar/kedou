@@ -33,3 +33,4 @@ build/
 .vscode/
 
 kedou-server/src/main/resources/application-dev.yml
+kedou-server/src/main/resources/application-prod.yml

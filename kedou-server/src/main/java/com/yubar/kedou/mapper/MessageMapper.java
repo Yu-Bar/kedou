@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 /**
 * @author 兰豹基
 * @description 针对表【message】的数据库操作Mapper
-* @createDate 2023-11-29 11:57:05
+* @createDate 2023-12-04 20:39:33
 * @Entity com.yubar.kedou.domain.po.Message
 */
 public interface MessageMapper extends BaseMapper<Message> {
