@@ -16,7 +16,7 @@ export const getFollowingSetById = (userId: number) => {
 }
 
 /**
- * 获取用户的关注集合
+ * 获取用户的粉丝集合
  * @param userId
  */
 export const getFollowerSetById = (userId: number) => {
@@ -27,7 +27,7 @@ export const getFollowerSetById = (userId: number) => {
 }
 
 /**
- * 获取用户的关注集合
+ * 获取用户的朋友集合
  * @param userId
  */
 export const getFriendSetById = (userId: number) => {

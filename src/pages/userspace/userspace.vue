@@ -128,6 +128,8 @@ import {
   getFriendSetById,
   unfollowUserById
 } from "@/service/RelationApi";
+import {useMessageStore} from "@/stores/modules/message";
+import {createSession} from "@/service/MessageApi";
 
 export default {
   data() {
@@ -304,8 +306,23 @@ export default {
     },
 
     // TODO: 私信(需要先写一个聊天页面，进行跳转）
-    message(id) {
-
+    async message(id) {
+      const messageStore = useMessageStore()
+      let session = messageStore.getSessionByUserId(id)
+      if(session == null){
+        const res = await createSession(id)
+        if(res.code == 1){
+          session = res.data
+        }else {
+          await uni.showToast({
+            title: res.msg,
+            icon: 'error'
+          })
+        }
+      }
+      await uni.navigateTo({
+        url: `/pages/message/chat/chat?sessionId=${session.session}`
+      })
     },
 
     // 返回页面时重新加载信息

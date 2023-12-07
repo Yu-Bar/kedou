@@ -180,7 +180,7 @@ export default {
 .tab-bar {
   left: 0;
   right: 0;
-  margin-top: 20rpx;
+  margin-top: 40rpx;
   width: 100%;
   height: 60px;
   display: flex;

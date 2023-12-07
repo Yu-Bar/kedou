@@ -113,6 +113,8 @@ import {getUserInfoById} from "@/service/UserApi";
 import {getLikeVideoList, likeVideo} from "@/service/LikesApi";
 import {getStarVideoList} from "@/service/StarsApi";
 import {getFollowerSetById, getFollowingSetById, getFriendSetById} from "@/service/RelationApi";
+import WebSocketService from "@/service/WebSocketService";
+import {useMessageStore} from "@/stores/modules/message";
 
 export default {
   data() {
@@ -196,6 +198,11 @@ export default {
     logout() {
       console.log('退出按钮被点击');
       this.memberStore.clearProfile();
+      // 在退出账号时关闭 WebSocket 连接
+      const webSocket = WebSocketService.getInstance()
+      webSocket.close()
+      const messageStore = useMessageStore()
+      messageStore.clearAllSessions()
       console.log('用户数据已清除');
       uni.navigateTo({
         url: '/pages/my/login/login' // 跳转到其他页面

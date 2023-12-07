@@ -25,6 +25,9 @@
 <script>
 import {useMemberStore} from "@/stores";
 import {postLoginPassWordAPI, signPassWordAPI} from "@/service/UserApi";
+import WebSocketService from "@/service/WebSocketService";
+import {getAllSession} from "@/service/MessageApi";
+import {useMessageStore} from "@/stores/modules/message";
 
 export default {
   data() {
@@ -47,11 +50,20 @@ export default {
         // console.log(res)
         const memberStore = useMemberStore()
         memberStore.setProfile(res.data)
+        // 建立 WebSocket 连接，并传入当前用户的 ID
+        const webSocket = WebSocketService.getInstance()
+        webSocket.connect(memberStore.profile?.id)
+        // 获取历史聊天信息
+        const chatRes = await getAllSession()
+        if(chatRes.code == 1){
+          const messageStore = useMessageStore()
+          messageStore.loadAllSessions(chatRes.data)
+        }
         await uni.showToast({
           icon: 'none',
           title: `欢迎回到科抖，${res.data.nickname}`
         })
-        uni.navigateBack({
+        await uni.navigateBack({
           delta: 2, // 关闭当前页面，如果是关闭上两个页面可以传入2
           success: function () {
             // 关闭成功的回调
@@ -77,6 +89,9 @@ export default {
         // console.log(res)
         const memberStore = useMemberStore()
         memberStore.setProfile(res.data)
+        // 建立 WebSocket 连接，并传入当前用户的 ID
+        const webSocket = WebSocketService.getInstance()
+        webSocket.connect(memberStore.profile?.id)
         await uni.showToast({
           icon: 'none',
           title: `欢迎来到科抖，${res.data.nickname}`

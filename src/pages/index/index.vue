@@ -29,6 +29,7 @@ import friend from "@/pages/friend/friend.vue";
 import message from "@/pages/message/message.vue";
 import my from "@/pages/my/my.vue";
 import {useMemberStore} from "@/stores";
+import WebSocketService from "@/service/WebSocketService";
 
 export default {
   data() {
@@ -46,7 +47,7 @@ export default {
       unreadCount: 0,
       memberStore: useMemberStore(),
       isTextVisible: true ,// 控制文字和图标的显示切换
-      reloadingVideo: false
+      reloadingVideo: false,
     };
   },
   components: {
@@ -157,8 +158,22 @@ export default {
     // 在页面加载时获取传递的参数
     if (options.activeIndex) {
       this.startIndex = options.activeIndex
+    }else{
+      // 建立 WebSocket 连接，并传入当前用户的 ID
+      const memberStore = useMemberStore()
+      if(memberStore.profile != null){
+        const webSocket = WebSocketService.getInstance()
+        webSocket.connect(memberStore.profile?.id)
+      }
     }
   },
+
+  beforeDestroy() {
+    // 在退出时关闭 WebSocket 连接
+    const webSocket = WebSocketService.getInstance()
+    webSocket.close()
+  },
+
 }
 </script>
 

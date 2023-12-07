@@ -65,7 +65,7 @@
         <scroll-view scroll-y="true" class="scroll-Y">
           <view v-for="(comment, index) in commentList" :key="index" class="comment-item">
             <uni-card :title="comment.nickname" :isFull="true" :sub-title="comment.content"
-                      :thumbnail="comment.profile" class="custom-card">
+                      :thumbnail="comment.profile" class="custom-card" @click="getIntoUserSpace(comment.createUser)">
               <text>{{ formattedDateTime(comment.createTime) }}</text>
               <view class="comment-like-dislike">
                 <image class="comment-mini-icon" src="/static/VideoIcon/like_gray.png"

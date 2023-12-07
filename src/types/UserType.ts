@@ -57,3 +57,14 @@ export type ProfileType = {
     relation: number
 }
 
+/** 关系列表的用户信息 */
+export type UserChatType = {
+    /** 用户ID */
+    id: number
+    /** 昵称 */
+    nickname: string
+    /** 头像 */
+    profile: string
+}
+
+
