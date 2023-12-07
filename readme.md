@@ -18,10 +18,10 @@
 - 私信功能
 
   <div class="image-container" style="display: flex;justify-content: space-around;align-items: center;">
-    <img src=".\doc\img\项目演示1.gif" alt="项目演示1" style="zoom:35%;" >
-    <img src=".\doc\img\项目演示2.gif" alt="项目演示2" style="zoom:35%;" >
-    <img src=".\doc\img\项目演示3.gif" alt="项目演示3" style="zoom:35%;" >
-    <img src=".\doc\img\项目演示4.gif" alt="项目演示3" style="zoom:35%;" >
+    <img src=".\doc\img\demonstration1.gif" alt="项目演示1" style="zoom:35%;" >
+    <img src=".\doc\img\demonstration2.gif" alt="项目演示2" style="zoom:35%;" >
+    <img src=".\doc\img\demonstration3.gif" alt="项目演示3" style="zoom:35%;" >
+    <img src=".\doc\img\demonstration4.gif" alt="项目演示3" style="zoom:35%;" >
   </div>
 
 
@@ -89,7 +89,7 @@
 
 ## 3 架构设计
 
-<img src=".\doc\img\架构设计.png" alt="架构设计" style="zoom: 33%;" />
+<img src=".\doc\img\Architecture.png" alt="架构设计" style="zoom: 33%;" />
 
 
 
@@ -344,7 +344,7 @@ BaseUrl : "/user/star"
 
 ### 4.7 消息模块
 
-<img src=".\doc\img\消息收发.png" alt="消息收发" style="zoom: 80%;" />
+<img src=".\doc\img\MessageSystem.png" alt="消息收发" style="zoom: 80%;" />
 
 BaseUrl : "/user/message"
 
@@ -382,7 +382,7 @@ BaseUrl : "/user/message"
 
 ## 5 数据库设计
 
-<img src=".\doc\img\数据库设计.png" alt="数据库设计"  />
+<img src=".\doc\img\DataBase.png" alt="数据库设计"  />
 
 
 
@@ -394,7 +394,7 @@ BaseUrl : "/user/message"
 
 Q：如何实现下面这样的数据格式化？当数字大于9999时显示××万
 
-<img src=".\doc\img\数据格式化.png" alt="数据格式化" style="float: left; zoom: 67%;" />
+<img src=".\doc\img\DataFormat.png" alt="数据格式化" style="float: left; zoom: 67%;" />
 
 要在 Vue 中动态绑定数据并根据数值进行特定的显示转换，可以使用计算属性或者在模板中使用过滤器来实现这个功能。
 
