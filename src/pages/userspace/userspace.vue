@@ -313,6 +313,7 @@ export default {
         const res = await createSession(id)
         if(res.code == 1){
           session = res.data
+          messageStore.addSessionToFront(session)
         }else {
           await uni.showToast({
             title: res.msg,

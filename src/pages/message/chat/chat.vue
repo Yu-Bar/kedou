@@ -14,7 +14,7 @@
 
       <scroll-view ref="scrollView" scroll-y="true" class="chat-scroll">
 
-
+        <view v-if="session.messageList != null">
           <view v-for="(message, index) in session.messageList" :key="index" class="message-item">
             <view v-if="message.createUser == memberStore.profile?.id" class="right-message">
               <text class="message-chat-content">{{message.content}}</text>
@@ -25,6 +25,17 @@
               <text class="message-chat-content">{{message.content}}</text>
             </view>
           </view>
+        </view>
+
+          <view class="left-message" style="visibility: hidden">
+            <image :src="memberStore.profile?.profile" class="message-user-profile" ></image>
+            <text class="message-chat-content">没有消息</text>
+          </view>
+          <view class="left-message" style="visibility: hidden">
+            <image :src="memberStore.profile?.profile" class="message-user-profile" ></image>
+            <text class="message-chat-content">没有消息</text>
+          </view>
+
       </scroll-view>
       <view id="scrollToBottom"></view>
       <view class="message-commit">
@@ -55,8 +66,7 @@
         session: {
           handler: function(val, oldVal) {
             console.log('session更新')
-              this.scrollToBottom()
-
+            setTimeout(this.scrollToBottom,200)
           },
           deep: true
         },
@@ -76,7 +86,7 @@
           if (res.code == 1) {
             this.messageStore.addMessageToSession(res.data)
             this.messageContent = ''
-            this.scrollToBottom();
+            // this.scrollToBottom();
           } else {
             await uni.showToast({
               title: res.msg,
@@ -100,7 +110,20 @@
               console.log("滚动到底部")
               uni.pageScrollTo({
                 selector: '#scrollToBottom',
-                duration: 0, // 立即滚动，无动画
+                duration: 500,
+              });
+            }
+          }).exec();
+        });
+      },
+      scrollToBottomNow() {
+        this.$nextTick(() => {
+          uni.createSelectorQuery().in(this).select('#scrollToBottom').boundingClientRect(rect => {
+            if (rect) {
+              console.log("滚动到底部")
+              uni.pageScrollTo({
+                selector: '#scrollToBottom',
+                duration: 0, // 立即滚动
               });
             }
           }).exec();
@@ -113,7 +136,7 @@
       }
     },
     mounted() {
-      this.scrollToBottom();
+      this.scrollToBottomNow();
     },
 }
 </script>
@@ -162,8 +185,7 @@
 
 .chat-scroll {
   position: relative;
-  margin-top: 200rpx;
-  margin-bottom: 200rpx;
+  margin-top: 10rpx;
 }
 
 .message-item {
@@ -217,16 +239,17 @@
   background: #fff;
   display: flex;
   bottom: 0;
-  height: 120rpx;
+  height: 180rpx;
   width: 100%;
+  font-size: 35rpx;
 }
 
 .message-input {
   width: 80%;
-  margin: 10rpx;
+  margin-top: 20rpx;
   padding: 10rpx;
   border-radius: 20rpx;
-  height: 50rpx;
+  height: 80rpx;
   color: black;
   background: #f3f3f3;
 }
@@ -234,14 +257,16 @@
 .submit-button {
   width: 15%;
   margin-right: 10rpx;
-  margin-top: 20rpx;
+  margin-top: 30rpx;
   background-color: #fc2b55;
   color: #fff;
   border: none;
   border-radius: 50rpx;
   cursor: pointer;
-  height: 50rpx;
-  font-size: 20rpx;
+  height: 80rpx;
+  font-size: 25rpx;
   text-align: center;
+  display: grid;
+  place-items: center; /* 垂直和水平居中 */
 }
 </style>
