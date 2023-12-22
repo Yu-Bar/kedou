@@ -10,10 +10,12 @@ import com.yubar.kedou.domain.po.Likes;
 import com.yubar.kedou.domain.po.Star;
 import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.domain.po.Video;
+import com.yubar.kedou.domain.vo.ProfileVO;
 import com.yubar.kedou.domain.vo.VideoVO;
 import com.yubar.kedou.mapper.LikesMapper;
 import com.yubar.kedou.mapper.StarMapper;
 import com.yubar.kedou.mapper.UserMapper;
+import com.yubar.kedou.service.RelationService;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.service.VideoService;
 import com.yubar.kedou.mapper.VideoMapper;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -41,6 +44,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
     private LikesMapper likesMapper;
     @Autowired
     private StarMapper starMapper;
+    @Autowired
+    RelationService relationService;
 
     /**
      * 按时间顺序倒序获取视频
@@ -106,6 +111,25 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video>
         video.setIsDelete(VideoStatusConstant.UN_DELETE);
         video.setOpen(VideoStatusConstant.OPEN);
         videoMapper.insertNewVideo(video);
+    }
+
+    /**
+     * 按时间顺序倒序获取朋友视频
+     * @return
+     */
+    @Override
+    public List<VideoVO> getFriendsVideoListDesc() {
+        // 获取朋友列表
+        Set<ProfileVO> friendSet = relationService.getFriendSet(BaseContext.getCurrentId());
+        List<Long> friendIdList = friendSet.stream().map(ProfileVO::getId).toList();
+        // 查找视频
+        LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Video::getIsDelete, VideoStatusConstant.UN_DELETE)
+                .in(Video::getCreateUser,friendIdList)
+                .orderByDesc(Video::getCreateTime);
+        List<Video> videoList = list(wrapper);
+        // 封装对象
+        return videoList2VideoVoList(videoList);
     }
 }
 

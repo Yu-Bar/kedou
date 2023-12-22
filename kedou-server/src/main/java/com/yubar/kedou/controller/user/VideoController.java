@@ -57,5 +57,15 @@ public class VideoController {
         return Result.success();
     }
 
+    /**
+     * 拉取朋友视频列表 需要拉取视频是否已收藏或已喜欢
+     * @return
+     */
+    @Operation(description = "查找朋友视频")
+    @GetMapping("/list/friends")
+    public Result<List<VideoVO>> listFriendsVideo(){
+        List<VideoVO> videoVoList = videoService.getFriendsVideoListDesc();
+        return Result.success(videoVoList);
+    }
 
 }

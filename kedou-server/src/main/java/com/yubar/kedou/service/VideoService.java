@@ -32,4 +32,10 @@ public interface VideoService extends IService<Video> {
      * @param videoPublishDTO
      */
     void publish(VideoPublishDTO videoPublishDTO);
+
+    /**
+     * 按时间顺序倒序获取朋友视频
+     * @return
+     */
+    List<VideoVO> getFriendsVideoListDesc();
 }
