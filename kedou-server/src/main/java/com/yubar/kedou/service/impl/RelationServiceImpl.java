@@ -178,12 +178,12 @@ public class RelationServiceImpl extends ServiceImpl<RelationMapper, Relation>
             relation.setIsDelete(1);
             updateById(relation);
 
-            // 添加用户的关注数 TODO 后续应该把关注数，粉丝数、获赞量这些常用信息保存在缓存中操作
+            // 减少用户的关注数 TODO 后续应该把关注数，粉丝数、获赞量这些常用信息保存在缓存中操作
             User user = userMapper.selectById(BaseContext.getCurrentId());
             user.setFollowing(user.getFollowing()-1);
             userMapper.updateById(user);
 
-            // 添加用户的粉丝数
+            // 减少用户的粉丝数
             user = userMapper.selectById(userId);
             user.setFollower(user.getFollower()-1);
             userMapper.updateById(user);

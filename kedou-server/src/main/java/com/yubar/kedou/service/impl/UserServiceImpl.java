@@ -21,6 +21,7 @@ import com.yubar.kedou.domain.po.User;
 import com.yubar.kedou.mapper.LikesMapper;
 import com.yubar.kedou.mapper.StarMapper;
 import com.yubar.kedou.mapper.VideoMapper;
+import com.yubar.kedou.mq.QueueManager;
 import com.yubar.kedou.service.UserService;
 import com.yubar.kedou.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private LikesMapper likesMapper;
     @Autowired
     private StarMapper starMapper;
+    @Autowired
+    QueueManager queueManager;
 
     @Value("${kedou.profile}")
     private  String defultProfile;
@@ -137,6 +140,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return userVO;
     }
 
+    /**
+     * 注册用户
+     * @param userSignDTO
+     * @return
+     */
     @Override
     public User sign(UserSignDTO userSignDTO) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -151,6 +159,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         System.out.println("defultProfile" + defultProfile);
         user.setProfile(defultProfile);
         userMapper.insertUser(user);
+        queueManager.createQueueAndBindToExchange("user." + user.getId(), user.getId().toString());
         return user;
     }
 }
