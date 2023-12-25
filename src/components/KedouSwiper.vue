@@ -78,8 +78,8 @@
             </uni-card>
           </view>
           <uni-card>
-              <text>暂无更多评论，发一条吧</text>
-              <text>...</text>
+            <text>暂无更多评论，发一条吧</text>
+            <text>...</text>
           </uni-card>
         </scroll-view>
       </view>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {getVideoLists} from "@/service/VideoApi";
+import {getFriendsVideoList, getVideoLists} from "@/service/VideoApi";
 import {commitComment, getCommentListByVideoId} from "@/service/CommentApi";
 import {dislikeVideo, likeVideo} from "@/service/LikesApi";
 import {disStarVideo, starVideo} from "@/service/StarsApi";
@@ -106,14 +106,12 @@ import {useMemberStore} from "@/stores";
 
 // let authorId;
 export default {
-  // props: {
-  //   //视频作者
-  //   authorId: {
-  //     type: Number, // 定义属性类型为数值
-  //     required: false, // 设置为必需的
-  //     // default: 0 // 设置默认值
-  //   }
-  // },
+  props: {
+    category: {
+      type: String,
+      default: "index"
+    }
+  },
   components: {},
   data() {
     return {
@@ -284,12 +282,18 @@ export default {
     //   console.log("btn",this.videoList)
     // },
     async getVideoData() {
-      const res = await getVideoLists()
+      let res;
+      if(this.category == 'friend'){
+        console.log('查看朋友视频')
+        res = await getFriendsVideoList()
+      }else{
+        res = await getVideoLists()
+      }
       // this.$set(this, 'videoList', res.data)
       this.videoList = res.data
+      console.log('category',this.category)
     },
     reloadComponent() {
-      console.log("请求后端视频")
       this.getVideoData()
       this.currentIndex = 0
     },
@@ -301,7 +305,7 @@ export default {
         this.videoList[this.currentIndex].isLike = true
         this.videoList[this.currentIndex].likes++
       }
-    else{
+      else{
         await uni.showToast({
           title: '喜欢失败，请检查网络',
           icon: 'error'

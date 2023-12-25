@@ -1,22 +1,26 @@
 <template>
 
-    <view class="content">
-      <!--      <CustomNavbar />-->
-      <KedouSwiper class="kedou-swiper-component" ref="tab0" v-show="activeIndex == 0 && !reloadingVideo"/>
-      <friend ref="tab1" v-show="activeIndex == 1"/>
-      <message ref="tab3" v-show="activeIndex == 3"/>
-      <my ref="tab4" v-show="activeIndex == 4"/>
-    </view>
+  <view class="content">
+    <!--      <CustomNavbar />-->
+    <KedouSwiper :category="videoCategory[0]" class="kedou-swiper-component" ref="tab0" v-show="activeIndex == 0 && !reloadingVideo"/>
+    <KedouSwiper :category="videoCategory[1]" class="kedou-swiper-component" ref="tab1" v-show="activeIndex == 1 && !reloadingVideo"/>
+    <message ref="tab3" v-show="activeIndex == 3"/>
+    <my ref="tab4" v-show="activeIndex == 4"/>
+  </view>
 
 
-    <!--        <KedouTabbar ref="kedouTabbarRef" :activeIndex="0" class="custom-tab-bar"></KedouTabbar>-->
+  <!--        <KedouTabbar ref="kedouTabbarRef" :activeIndex="0" class="custom-tab-bar"></KedouTabbar>-->
   <view class="tab-bar">
     <view v-for="(tab, index) in tabs" :key="index" @click="switchTab(index)" class="tar-bar-text">
+
       <image v-if="index == 2" :src="tab.iconPath" class="center-icon"/>
-      <image v-else-if="index == 0 && !isTextVisible" :src="tab.iconPath" class="reload-icon"/>
+      <image v-else-if="index === 0 && !isTextVisible" :src="tab.iconPath" class="reload-icon"/>
+      <image v-else-if="index === 1 && !isTextVisible1" :src="tab.iconPath" class="reload-icon"/>
       <text v-else :class="{'active': activeIndex == index}">
-          {{ index != 0 || isTextVisible ? tab.text : ''}}
+<!--        {{ (index == 0 && !isTextVisible) || (index == 1 && !isTextVisible1) ? '' : tab.text }}-->
+        {{tab.text}}
       </text>
+
       <view v-if="index == 3 && showBadge" class="badge">{{ unreadCount }}</view>
     </view>
   </view>
@@ -25,7 +29,6 @@
 
 <script>
 import CustomNavbar from './components/CustomNavbar.vue'
-import friend from "@/pages/friend/friend.vue";
 import message from "@/pages/message/message.vue";
 import my from "@/pages/my/my.vue";
 import {useMemberStore} from "@/stores";
@@ -36,9 +39,13 @@ export default {
     return {
       isActivePage: false, // 标记当前页面是否是活跃页面
       activeIndex: 0,
+      videoCategory: [
+        'index',
+        'friend'
+      ],
       tabs: [
         {text: '首页',iconPath: '/static/reload.png'},
-        {text: '朋友'},
+        {text: '朋友',iconPath: '/static/reload.png'},
         {iconPath: '/static/add.png'},
         {text: '消息'},
         {text: '我'}
@@ -47,40 +54,21 @@ export default {
       unreadCount: 0,
       memberStore: useMemberStore(),
       isTextVisible: true ,// 控制文字和图标的显示切换
+      isTextVisible1: true ,// 控制文字和图标的显示切换
       reloadingVideo: false,
     };
   },
   components: {
     CustomNavbar,
-    friend,
     message,
     my
   },
-  // onTabItemTap(item) {
-  //   if (this.isActivePage){
-  //     // 重新获取数据或清空页面数据
-  //     console.log('当前页面的 TabBar 被点击了，执行刷新操作');
-  //     // 通过改变 reloadKey 的值来触发 KedouSwiper 组件的重新加载
-  //     this.$refs.kedouSwiperRef.reloadComponent()
-  //   }
-  // },
-  // onShow() {
-  //   setTimeout(() => {
-  //     this.isActivePage = true; // 略微延迟，确保准确获取到状态
-  //   }, 100); // 当页面显示时，将 isActivePage 设置为 true
-  // },
-  // onHide() {
-  //   this.isActivePage = false; // 当页面隐藏时，将 isActivePage 设置为 false
-  // },
   watch: {
     // 监听子组件显示属性的变化
     activeIndex(newValue, oldValue) {
       // console.log('newValue', newValue)
       // console.log('oldValue', oldValue)
       switch (newValue) {
-        case 1:
-          this.$refs.tab1.showByTab();
-          break;
         case 3:
           this.$refs.tab3.showByTab();
           break;
@@ -91,9 +79,6 @@ export default {
           break;
       }
 
-      // if (newValue !== oldValue) {
-      //   // 在子组件显示时执行的操作
-      //   this.handleFriendShowEvent();
     }
   },
   methods: {
@@ -109,6 +94,14 @@ export default {
           this.reloadingVideo = true
           this.$refs.tab0.reloadComponent()
           this.playAnimation()
+        }else if (index == 1) {
+          // 如果当前点击的是已经首页，则执行刷新操作
+          console.log('执行刷新操作')
+          this.$refs.tab1.stopPlay()
+          this.$refs.tab1.autoPlay = false
+          this.reloadingVideo = true
+          this.$refs.tab1.reloadComponent()
+          this.playAnimation1()
         }
         // 更新未读消息数
         this.showBadge = false; // 将小红点隐藏
@@ -129,11 +122,13 @@ export default {
         }else{
           console.log('index',index)
           console.log('activeIndex',this.activeIndex)
+          this.$refs.tab0.stopPlay()
+          this.$refs.tab1.stopPlay()
           // 回到主页时继续播放视频 切出主页时停止播放视频
           if(index == 0){
             this.$refs.tab0.continuePlay()
-          }else {
-            this.$refs.tab0.stopPlay()
+          }else if(index == 1){
+            this.$refs.tab1.continuePlay()
           }
           this.activeIndex = index
         }
@@ -146,10 +141,24 @@ export default {
         this.reloadingVideo = false
         this.$refs.tab0.continuePlay()
         this.$refs.tab0.autoPlay = true
+        this.isTextVisible = true
       }, 500);
-      // 设置定时器，在2秒后将图标切换回文字
+      // 设置定时器将图标切换回文字
       setTimeout(() => {
         this.isTextVisible = true
+      }, 1200);
+    },
+    playAnimation1() {
+      // 图片转换为图标并播放动画
+      this.isTextVisible1 = false
+      setTimeout(() => {
+        this.reloadingVideo = false
+        this.$refs.tab1.continuePlay()
+        this.$refs.tab1.autoPlay = true
+      }, 500);
+      // 设置定时器将图标切换回文字
+      setTimeout(() => {
+        this.isTextVisible1 = true
       }, 1200);
     },
   },
@@ -204,7 +213,6 @@ page {
   align-items: center;
   justify-content: center;
   flex: 1; /* 让元素等分容器宽度 */
-  margin: 0 10px; /* 设置元素间的间距 */
   text-align: center; /* 文字居中 */
   margin-bottom: 20rpx;
 }
@@ -228,7 +236,6 @@ page {
 .reload-icon {
   width: 55rpx;
   height: 55rpx;
-  margin-bottom: 10rpx;
   /* 添加旋转动画 */
   animation: rotateAnimation 1.5s linear 0s 1 normal;
 }

@@ -8,6 +8,13 @@ export const getVideoLists = () => {
 	})
 }
 
+export const getFriendsVideoList = () => {
+	return http<VideoType[]>({
+		method: 'GET',
+		url: '/video/list/friends',
+	})
+}
+
 export const getVideoListsWithAuthor = (id: number) => {
 	return http<VideoType[]>({
 		method: 'GET',
